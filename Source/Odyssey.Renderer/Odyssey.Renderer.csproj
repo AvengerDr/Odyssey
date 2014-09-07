@@ -79,6 +79,17 @@
     <Compile Include="Graphics\Buffer.Constant.cs" />
     <Compile Include="Graphics\DepthStencilStateCollection.cs" />
     <Compile Include="Graphics\DepthStencilViewSelector.cs" />
+    <Compile Include="Graphics\Drawing\Designer.BSpline.cs" />
+    <Compile Include="Graphics\Drawing\DrawInstruction.cs" />
+    <Compile Include="Graphics\Drawing\FillPolylineInstruction.cs" />
+    <Compile Include="Graphics\Drawing\DrawPolylineInstruction.cs" />
+    <Compile Include="Graphics\Drawing\IDesignerInstruction.cs" />
+    <Compile Include="Graphics\Drawing\SetColorInstruction.cs" />
+    <Compile Include="Graphics\Drawing\DrawEllipseInstruction.cs" />
+    <Compile Include="Graphics\Drawing\DrawRectangleInstruction.cs" />
+    <Compile Include="Graphics\Drawing\FillEllipseInstruction.cs" />
+    <Compile Include="Graphics\Drawing\FillRectangleInstruction.cs" />
+    <Compile Include="Graphics\Drawing\SetTransformInstruction.cs" />
     <Compile Include="Graphics\Models\BufferCollection.cs" />
     <Compile Include="Graphics\Models\CylinderMesh.cs" />
     <Compile Include="Graphics\Models\GeoSphere.cs" />
@@ -102,8 +113,6 @@
     <Compile Include="Graphics\Models\TeapotMesh.cs" />
     <Compile Include="Graphics\Models\VertexBufferBinding.cs" />
     <Compile Include="Graphics\Models\VertexBufferBindingCollection.cs" />
-    <Compile Include="Graphics\Organization\Commands\IPostProcessCommand.cs" />
-    <Compile Include="Graphics\Organization\RenderableInstruction.cs" />
     <Compile Include="Graphics\PostProcessing\Blur.cs" />
     <Compile Include="Graphics\RasterizerStateCollection.cs" />
     <Compile Include="Graphics\Shaders\ConstantBufferIndex.cs" />
@@ -172,10 +181,10 @@
     <Compile Include="Graphics\Shaders\TechniqueKey.cs" />
     <Compile Include="Graphics\Shaders\TechniqueMapping.cs" />
     <Compile Include="Graphics\Shaders\TextureDescription.cs" />
-    <Compile Include="Graphics\Shapes\Designer.cs" />
-    <Compile Include="Graphics\Shapes\Designer.Ellipse.cs" />
-    <Compile Include="Graphics\Shapes\Designer.Rectangle.cs" />
-    <Compile Include="Graphics\Shapes\ShapeMeshDescription.cs" />
+    <Compile Include="Graphics\Drawing\Designer.cs" />
+    <Compile Include="Graphics\Drawing\Designer.Ellipse.cs" />
+    <Compile Include="Graphics\Drawing\Designer.Rectangle.cs" />
+    <Compile Include="Graphics\Drawing\ShapeMeshDescription.cs" />
     <Compile Include="Graphics\StateCollectionBase.cs" />
     <Compile Include="Graphics\StateViewer.cs" />
     <Compile Include="Graphics\Texture.cs" />
@@ -203,32 +212,35 @@
     <Compile Include="Graphics\ViewType.cs" />
     <Compile Include="Graphics\WICFlags.cs" />
     <Compile Include="Graphics\WICHelper.cs" />
-    <Compile Include="Graphics\Organization\Commands\DepthStencilStateChangeCommand.cs" />
-    <Compile Include="Graphics\Organization\Commands\BlendStateChangeCommand.cs" />
-    <Compile Include="Graphics\Organization\Commands\Command.cs" />
-    <Compile Include="Graphics\Organization\Commands\CommandManager.cs" />
-    <Compile Include="Graphics\Organization\Commands\TechniqueRenderCommand.cs" />
-    <Compile Include="Graphics\Organization\Commands\ITechniqueRenderCommand.cs" />
-    <Compile Include="Graphics\Organization\Commands\InstancingRenderCommand.cs" />
-    <Compile Include="Graphics\Organization\Commands\PostProcessCommand.cs" />
-    <Compile Include="Graphics\Organization\Commands\RenderToTextureCommandBase.cs" />
-    <Compile Include="Graphics\Organization\Commands\RasterizerStateChangeCommand.cs" />
-    <Compile Include="Graphics\Organization\Commands\RenderCommand.cs" />
-    <Compile Include="Graphics\Organization\RenderMapper.cs" />
     <Compile Include="Content\TextureContentReader.cs" />
     <Compile Include="Engine\DirectXDeviceManager.cs" />
     <Compile Include="Engine\GraphicsPresenter.cs" />
     <Compile Include="Engine\IDirectXDeviceFactory.cs" />
     <Compile Include="Engine\IOdysseyDeviceService.cs" />
     <Compile Include="Engine\SwapChainGraphicsPresenter.cs" />
-    <Compile Include="Graphics\Organization\Commands\RenderSceneToTextureCommand.cs" />
+    <Compile Include="Organization\Commands\BlendStateChangeCommand.cs" />
+    <Compile Include="Organization\Commands\DepthStencilStateChangeCommand.cs" />
+    <Compile Include="Organization\Commands\EngineCommand.cs" />
+    <Compile Include="Organization\Commands\InstancingRenderCommand.cs" />
+    <Compile Include="Organization\Commands\IPostProcessCommand.cs" />
+    <Compile Include="Organization\Commands\ITechniqueRenderCommand.cs" />
+    <Compile Include="Organization\Commands\PostProcessCommand.cs" />
+    <Compile Include="Organization\Commands\RasterizerStateChangeCommand.cs" />
+    <Compile Include="Organization\Commands\RenderCommand.cs" />
+    <Compile Include="Organization\Commands\RenderSceneToTextureCommand.cs" />
+    <Compile Include="Organization\Commands\RenderToTextureCommandBase.cs" />
+    <Compile Include="Organization\Commands\TechniqueRenderCommand.cs" />
+    <Compile Include="Organization\RenderableInstruction.cs" />
+    <Compile Include="Organization\RenderMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Engine\DirectXDevice.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Graphics\Buffer.Typed.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Compile Include="Graphics\Drawing\Designer.Line.cs" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="$(SolutionDir)\Odyssey.PostSettings.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

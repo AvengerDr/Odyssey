@@ -6,11 +6,11 @@ using Odyssey.Serialization;
 
 namespace Odyssey.Graphics
 {
-    public abstract class ColorResource : ISerializableResource, IResource
+    public abstract class ColorResource : ISerializableResource, IResource, IColorResource
     {
-        private readonly GradientType type;
+        private readonly ColorType type;
 
-        protected ColorResource(string name, GradientType type)
+        protected ColorResource(string name, ColorType type)
         {
             Name = name;
             this.type = type;
@@ -19,7 +19,7 @@ namespace Odyssey.Graphics
 
         public string Name { get; private set; }
 
-        public GradientType Type
+        public ColorType Type
         {
             get { return type; }
         }

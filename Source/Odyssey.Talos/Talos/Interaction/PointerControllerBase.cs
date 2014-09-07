@@ -30,15 +30,15 @@ namespace Odyssey.Talos.Interaction
         private IPointerService pointerService;
         protected Vector2 ScreenSize { get; private set; }
 
+        protected PointerControllerBase(IServiceRegistry services) : base(services) {}
 
-        public override void BindToEntity(IEntity source)
+        public override void BindToEntity(Entity source)
         {
             base.BindToEntity(source);
-            var services = source.Scene.Services;
-            pointerService = services.GetService<IPointerService>();
-            var deviceSettings = services.GetService<IDirectXDeviceSettings>();
+            pointerService = Services.GetService<IPointerService>();
+            var deviceSettings = Services.GetService<IDirectXDeviceSettings>();
             ScreenSize = new Vector2(deviceSettings.PreferredBackBufferWidth, deviceSettings.PreferredBackBufferHeight);
-            keyboardService = services.GetService<IKeyboardService>();
+            keyboardService = Services.GetService<IKeyboardService>();
         }
 
         public override void Update(ITimeService time)

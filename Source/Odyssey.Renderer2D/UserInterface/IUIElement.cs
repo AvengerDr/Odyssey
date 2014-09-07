@@ -1,7 +1,6 @@
 ﻿#region Using Directives
 
 using Odyssey.Content;
-using Odyssey.Graphics;
 using Odyssey.Interaction;
 using SharpDX;
 using System;
@@ -10,7 +9,7 @@ using System;
 
 namespace Odyssey.UserInterface
 {
-    public interface IUIElement : IRenderable, IResource
+    public interface IUIElement : IResource
     {
         Vector2 AbsolutePosition { get; }
 
@@ -66,5 +65,7 @@ namespace Odyssey.UserInterface
         bool Contains(Vector2 cursorLocation);
 
         void Focus();
+
+        void Render();
     }
 }

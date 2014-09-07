@@ -4,9 +4,9 @@ namespace Odyssey.Talos.Maps
 {
     public class EntityEventArgs : EventArgs
     {
-        public IEntity Source { get; private set; }
+        public Entity Source { get; private set; }
 
-        public EntityEventArgs(IEntity entity)
+        public EntityEventArgs(Entity entity)
         {
             Source = entity;
         }

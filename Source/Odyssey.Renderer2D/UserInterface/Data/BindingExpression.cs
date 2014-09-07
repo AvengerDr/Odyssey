@@ -61,7 +61,7 @@ namespace Odyssey.UserInterface.Data
 
         private object SourceValue
         {
-            get { return sourceProperty.GetValue(binding.Source); }
+            get { return sourceProperty != null ? sourceProperty.GetValue(binding.Source) : binding.Source.ToString(); }
         }
 
         private object TargetValue
@@ -71,10 +71,12 @@ namespace Odyssey.UserInterface.Data
 
         public void Initialize()
         {
-            sourceProperty = binding.Source.GetType().GetRuntimeProperty(binding.Path);
+            if (!string.IsNullOrEmpty(binding.Path))
+                sourceProperty = binding.Source.GetType().GetRuntimeProperty(binding.Path);
+            Value = SourceValue;
 
             var iNotifyPropertyChanged = binding.Source as INotifyPropertyChanged;
-            Value = SourceValue;
+            
             if (iNotifyPropertyChanged != null)
                 iNotifyPropertyChanged.PropertyChanged += UpdateFromSource;
         }

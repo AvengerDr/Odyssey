@@ -17,7 +17,7 @@
 
 using Odyssey.Graphics;
 using SharpDX;
-using Rectangle = Odyssey.Graphics.Shapes.Rectangle;
+using Rectangle = Odyssey.Graphics.Drawing.Rectangle;
 
 #endregion Using Directives
 
@@ -28,15 +28,6 @@ namespace Odyssey.UserInterface.Controls
         public override bool Contains(Vector2 cursorLocation)
         {
             return BoundingRectangle.Contains(cursorLocation);
-        }
-
-        protected override void OnInitializing(ControlEventArgs e)
-        {
-            base.OnInitializing(e);
-
-            //Rectangle rEnabled =
-            //    ToDispose(Shape.FromControl<Rectangle>(this, string.Format("{0}_{1}_rectangle", Name, ControlStatus.Enabled)));
-            //ShapeMap.Add(ControlStatus.Enabled, Style.VisualStateDefinition.figures);
         }
     }
 }

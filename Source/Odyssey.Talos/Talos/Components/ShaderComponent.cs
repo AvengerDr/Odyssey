@@ -36,7 +36,7 @@ namespace Odyssey.Talos.Components
                     return;
                 key = value;
 
-                RaisePropertyChange("Key");
+                RaisePropertyChanged();
             }
         }
 
@@ -54,7 +54,7 @@ namespace Odyssey.Talos.Components
             {
                 Technique = new Technique(DeviceService.DirectXDevice, techniqueKey, mapping);
                 techniquePool.RegisterTechnique(Technique);
-                Messenger.Send(new ContentMessage<Technique>(Technique));
+                Messenger.Send(new ContentMessage<Technique>(Owner, AssetName, Technique));
             }
             else Technique = techniquePool.GetTechnique(techniqueKey);
             

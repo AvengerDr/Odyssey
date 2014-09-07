@@ -21,9 +21,11 @@ using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
+using Odyssey.Content;
 using Odyssey.Talos.Components;
 using Odyssey.Utilities.Logging;
 using Odyssey.Utilities.Reflection;
+using Odyssey.Utilities.Text;
 using SharpYaml.Serialization;
 
 #endregion
@@ -32,23 +34,30 @@ namespace Odyssey.Talos
 {
     [YamlTag("Entity")]
     [DebuggerDisplay("{Name}, Id={Id}")]
-    public sealed class Entity : IEntity
+    public sealed class Entity : IEntity, IResourceProvider
     {
         private static int count;
-
         private readonly long id;
         private long key;
         private Scene scene;
 
-        public Entity() : this("Untitled")
-        {
-        }
+        public Entity() : this("Untitled") {}
 
         public Entity(string name)
         {
             Name = name;
             id = count++;
             IsEnabled = true;
+        }
+
+        public IEnumerable<Entity> Children
+        {
+            get { return scene.EntityMap.SelectChildren(this); }
+        }
+
+        public Scene Scene
+        {
+            get { return scene; }
         }
 
         /// <summary>
@@ -59,10 +68,8 @@ namespace Odyssey.Talos
             get { return id; }
         }
 
-        [YamlMember(0)]
         public string Name { get; set; }
 
-        [YamlMember(1)]
         public bool IsEnabled { get; set; }
 
         /// <summary>
@@ -73,22 +80,9 @@ namespace Odyssey.Talos
             get { return key; }
         }
 
-        [YamlIgnore]
-        public IScene Scene
-        {
-            get { return scene; }
-        }
-
-        [YamlIgnore]
         public IEnumerable<IComponent> Components
         {
-            get { return Scene.SelectEntityComponents(this); }
-        }
-
-        [Pure]
-        public bool ContainsComponent(long keyPart)
-        {
-            return Scene.EntityHasComponent(this, keyPart);
+            get { return scene.EntityMap.SelectEntityComponents(this); }
         }
 
         [Pure]
@@ -96,32 +90,67 @@ namespace Odyssey.Talos
             where TComponent : IComponent
 
         {
-            return Scene.EntityHasComponent(this, ComponentTypeManager.GetKeyPart<TComponent>());
+            return ContainsComponent(ComponentTypeManager.GetKeyPart<TComponent>());
+        }
+
+        public IEnumerable<string> Tags
+        {
+            get { return scene.TagManager.ContainsEntity(id) ? scene.TagManager[id] : Enumerable.Empty<string>(); }
+        }
+
+        public void AddTag(string tag)
+        {
+            scene.TagManager.AddTagToEntity(id, tag);
+        }
+
+        public void RemoveTag(string tag)
+        {
+            scene.TagManager.RemoveTagFromEntity(id, tag);
+        }
+
+        public bool ContainsTag(string tag)
+        {
+            return scene.TagManager.ContainsTag(id, tag);
+        }
+
+        public bool ContainsComponent(long keyPart)
+        {
+            return Scene.EntityMap.EntityHasComponent(this, keyPart);
+        }
+
+        public bool ContainsComponent(string componentType)
+        {
+            string componentName = string.Format("{0}Component", componentType);
+            return Components.Any(c=>string.Equals(c.GetType().Name, componentName));
         }
 
         public bool TryGetComponent<TComponent>(out TComponent component)
-            where TComponent : IComponent
+            where TComponent : Component
         {
-            return Scene.TryGetEntityComponent(this, ComponentTypeManager.GetKeyPart<TComponent>(), out component);
+            return Scene.EntityMap.TryGetEntityComponent(this, ComponentTypeManager.GetKeyPart<TComponent>(), out component);
         }
 
         public TComponent GetComponent<TComponent>()
-            where TComponent : IComponent
+            where TComponent : Component
         {
             return GetComponent<TComponent>(ComponentTypeManager.GetKeyPart<TComponent>());
         }
 
         public TComponent GetComponent<TComponent>(long keyPart)
-            where TComponent : IComponent
+            where TComponent : Component
         {
-            return Scene.GetEntityComponent<TComponent>(this, keyPart);
+            return Scene.EntityMap.GetEntityComponent<TComponent>(this, keyPart);
         }
 
-        public IComponent GetComponent(Type componentType)
+        public Component GetComponent(string componentType)
         {
-            Contract.Requires<ArgumentNullException>(componentType!= null, "componentType");
-            Contract.Requires<ArithmeticException>(ReflectionHelper.IsTypeDerived(componentType, typeof(IComponent)));
-            return Scene.GetEntityComponent<IComponent>(this, ComponentTypeManager.GetKeyPart(componentType));
+            string componentName = string.Format("{0}Component", componentType);
+            return Components.First(c => string.Equals(c.GetType().Name, componentName)) as Component;
+        }
+
+        public Entity FindChild(string name)
+        {
+            return scene.EntityMap.FindChild(this, name);
         }
 
         public bool Validate()
@@ -146,13 +175,20 @@ namespace Odyssey.Talos
             Contract.Requires<ArgumentNullException>(component != null, "component");
             key |= component.KeyPart;
             component.AssignToScene(scene);
-            scene.AddComponentToEntity(component, this);
+            scene.EntityMap.AddComponentToEntity(component, this);
         }
 
         public void UnregisterComponent(Component component)
         {
             key &= ~component.KeyPart;
-            scene.RemoveComponentFromEntity(component, this);
+            scene.EntityMap.RemoveComponentFromEntity(component, this);
+        }
+
+        public void UnregisterComponent<TComponent>()
+            where TComponent : Component
+        {
+            var component = GetComponent<TComponent>();
+            UnregisterComponent(component);
         }
 
         internal void AssignToScene(Scene scene)
@@ -203,5 +239,37 @@ namespace Odyssey.Talos
             }
             return test;
         }
+
+        #region IResourceProvider
+
+        bool IResourceProvider.ContainsResource(string resourceName)
+        {
+            string resourceArray;
+            string index;
+            bool isArray = Text.IsExpressionArray(resourceName, out resourceArray, out index);
+
+            return isArray
+                ? ContainsComponent(resourceArray) && ((IResourceProvider) GetComponent(resourceArray)).ContainsResource(index)
+                : ContainsComponent(resourceName);
+
+        }
+
+        TResource IResourceProvider.GetResource<TResource>(string resourceName)
+        {
+            string resourceArray;
+            string index;
+            bool isArray = Text.IsExpressionArray(resourceName, out resourceArray, out index);
+            return isArray
+               ? ((IResourceProvider)GetComponent(resourceArray)).GetResource<TResource>(index)
+               : GetComponent(resourceName) as TResource;
+        }
+
+        IEnumerable<IResource> IResourceProvider.Resources
+        {
+            get { return Components; }
+        }
+
+        #endregion
+
     }
 }

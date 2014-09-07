@@ -29,7 +29,7 @@ using SharpDX;
 
 namespace Odyssey.Talos.Initializers
 {
-    public class EntityInitializer : Initializer<IEntity>
+    public class EntityInitializer : Initializer<Entity>
     {
         private static readonly Dictionary<string, ParameterMethod> ReferenceActions = new Dictionary<string, ParameterMethod>
         {
@@ -58,7 +58,7 @@ namespace Odyssey.Talos.Initializers
         {
         }
 
-        public override void Initialize(DirectXDevice device, IEntity source, InitializerParameters parameters)
+        public override void Initialize(DirectXDevice device, Entity source, InitializerParameters parameters)
         {
             base.Initialize(device, source, parameters);
             if (!parameters.Technique.UsesProceduralTextures)
@@ -70,7 +70,7 @@ namespace Odyssey.Talos.Initializers
             var services = initializer.Services;
             var technique = initializer.Technique;
 
-            var scene = services.GetService<IScene>();
+            var scene = services.GetService<IEntityProvider>();
 
             var data = from e in scene.Entities
                 let techniqueComponents = e.Components.OfType<ITechniqueComponent>()
@@ -86,7 +86,7 @@ namespace Odyssey.Talos.Initializers
             }
         }
 
-        protected override IEnumerable<IParameter> CreateParameter(ConstantBufferDescription cbParent, IEntity entity, int parameterIndex,
+        protected override IEnumerable<IParameter> CreateParameter(ConstantBufferDescription cbParent, Entity entity, int parameterIndex,
             string reference, InitializerParameters initializerParameters)
         {
             if (!ReferenceActions.ContainsKey(reference))

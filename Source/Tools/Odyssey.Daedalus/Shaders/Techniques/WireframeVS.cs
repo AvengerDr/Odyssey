@@ -23,8 +23,8 @@ namespace Odyssey.Daedalus.Shaders.Techniques
             InputStruct = VertexPositionNormalBarycentric;
             OutputStruct = VertexPositionTextureIntensityBarycentricOut;
 
-            Structs.ConstantBuffer cbFrame = CBPerFrame;
-            Structs.ConstantBuffer cbInstance = CBPerInstance;
+            ConstantBuffer cbFrame = CBPerFrame;
+            ConstantBuffer cbInstance = CBPerInstance;
             Add(cbFrame);
             Add(cbInstance);
 

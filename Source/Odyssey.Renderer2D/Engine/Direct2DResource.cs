@@ -1,5 +1,4 @@
 ﻿using Odyssey.Content;
-#if !WP8
 using Odyssey.Graphics;
 using SharpDX;
 using SharpDX.Direct2D1;
@@ -9,7 +8,7 @@ using System.Runtime.InteropServices;
 
 namespace Odyssey.Engine
 {
-    public class Direct2DResource : Component, IResource
+    public class Direct2DResource : Component, IResource, IInitializable
     {
 
         protected Direct2DResource(string name, Direct2DDevice device)
@@ -70,6 +69,7 @@ namespace Odyssey.Engine
             {
                 resource.Tag = this;
             }
+            IsInited = true;
         }
 
         /// <summary>
@@ -80,10 +80,15 @@ namespace Odyssey.Engine
             base.OnPropertyChanged(propertyName);
             if (propertyName == "Name")
             {
-                if (Device.IsDebugMode && Resource != null) {Resource.Tag = Name;}
+                if (Device.IsDebugMode && Resource != null)
+                {
+                    Resource.Tag = Name;
+                }
             }
         }
-    }
-}
 
-#endif
+        public bool IsInited { get; private set; }
+
+    }
+
+}

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Odyssey.Animations;
 using SharpDX;
 using SharpYaml;
 using SharpYaml.Serialization;
@@ -12,6 +13,7 @@ namespace Odyssey.Talos.Components
 
         internal bool IsDirty { get; set; }
 
+        [Animatable]
         public Quaternion Orientation
         {
             get { return orientation; }

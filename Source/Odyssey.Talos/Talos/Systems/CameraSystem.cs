@@ -62,7 +62,7 @@ namespace Odyssey.Talos.Systems
 
         public override void Process(ITimeService time)
         {
-            foreach (IEntity entity in Entities)
+            foreach (Entity entity in Entities)
             {
                 var cUpdate = entity.GetComponent<UpdateComponent>();
                 if (!cUpdate.RequiresUpdate)
@@ -74,7 +74,7 @@ namespace Odyssey.Talos.Systems
             }
         }
 
-        private void ResetCamera(IEntity entity)
+        private void ResetCamera(Entity entity)
         {
             var deviceSettings = entity.Scene.Services.GetService<IDirectXDeviceSettings>();
             float aspectRatio = deviceSettings.PreferredBackBufferWidth/(float) deviceSettings.PreferredBackBufferHeight;

@@ -1,4 +1,5 @@
 ﻿using System;
+using Odyssey.Engine;
 
 namespace Odyssey.Animations
 {
@@ -9,5 +10,6 @@ namespace Odyssey.Animations
 
         float Duration { get; }
         object Evaluate(float elapsedTime);
+        IKeyFrame this[int index] { get; }
     }
 }

@@ -18,7 +18,7 @@ namespace Odyssey.Talos.Systems
             lightNodes = new LightCollection();
         }
 
-        protected void RemoveEntity(IEntity entity)
+        protected void RemoveEntity(Entity entity)
         {
             var node = (from kvp in lightNodes where kvp.Value.EntityId == entity.Id select kvp.Value).First();
             lightNodes.Remove(node.Id);
@@ -33,7 +33,8 @@ namespace Odyssey.Talos.Systems
 
         public override void Stop()
         {
-            Messenger.Unregister<EntityChangeMessage>(this);
+            Messenger.Unregister<EntityChangeMessage>(this); 
+            Services.RemoveService(typeof(ILightService));
         }
 
     }

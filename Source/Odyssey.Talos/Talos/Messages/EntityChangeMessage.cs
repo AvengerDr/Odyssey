@@ -4,7 +4,7 @@
     {
         public ChangeType Action { get; private set; }
 
-        public EntityChangeMessage(IEntity source, ChangeType action, bool isSynchronous = false)
+        public EntityChangeMessage(Entity source, ChangeType action, bool isSynchronous = false)
             : base(source, isSynchronous)
         {
             Action = action;

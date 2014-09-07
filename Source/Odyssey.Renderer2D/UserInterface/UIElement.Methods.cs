@@ -17,6 +17,9 @@
 
 using System;
 using System.Diagnostics.Contracts;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Xml;
 using Odyssey.Content;
 using Odyssey.Engine;
@@ -26,6 +29,7 @@ using Odyssey.UserInterface.Controls;
 using Odyssey.UserInterface.Data;
 using Odyssey.UserInterface.Serialization;
 using Odyssey.UserInterface.Style;
+using Odyssey.Utilities.Reflection;
 using SharpDX;
 using MouseEventArgs = Odyssey.Interaction.PointerEventArgs;
 
@@ -80,8 +84,10 @@ namespace Odyssey.UserInterface
                 bindingExpression.Initialize();
             }
 
-            if (AnimationController.HasAnimations)
-                AnimationController.Initialize();
+            behaviors.Attach(this);
+
+            if (Animator.HasAnimations)
+                Animator.Initialize();
 
             OnInitialized(args);
         }
@@ -117,7 +123,7 @@ namespace Odyssey.UserInterface
         /// Creates a shallow copy of this object and its children.
         /// </summary>
         /// <returns>A new copy of this element.</returns>
-        internal virtual UIElement Copy()
+        protected internal virtual UIElement Copy()
         {
             UIElement newElement = (UIElement) Activator.CreateInstance(GetType());
 
@@ -126,7 +132,25 @@ namespace Odyssey.UserInterface
             newElement.Height = Height;
             newElement.Margin = Margin;
 
+            CopyEvents(typeof(UIElement), this, newElement);           
+
+            newElement.Animator.AddAnimations(Animator.Animations);
             return newElement;
+        }
+
+        protected static void CopyEvents(Type type, object source, object target)
+        {
+            var events = from f in ReflectionHelper.GetFields(type)
+                         where f.FieldType.GetTypeInfo().BaseType == typeof(MulticastDelegate)
+                         select f;
+
+            foreach (var eventField in events)
+            {
+                var eventHandler = eventField.GetValue(source);
+                if (eventHandler == null)
+                    continue;
+                eventField.SetValue(target, eventHandler);
+            }
         }
 
         internal virtual void ProcessKeyDown(KeyEventArgs e)
@@ -142,7 +166,7 @@ namespace Odyssey.UserInterface
         internal virtual bool ProcessPointerMovement(MouseEventArgs e)
         {
             Vector2 location = e.CurrentPoint.Position;
-            if (!HasCaptured && !Contains(location))
+            if (!IsPointerCaptured && !Contains(location))
                 return false;
 
             if (canRaiseEvents)
@@ -178,7 +202,7 @@ namespace Odyssey.UserInterface
         internal virtual bool ProcessPointerRelease(MouseEventArgs e)
         {
             Vector2 location = e.CurrentPoint.Position;
-            if (canRaiseEvents && (HasCaptured || Contains(location)))
+            if (canRaiseEvents && (IsPointerCaptured || Contains(location)))
             {
                 if (IsPressed && e.CurrentPoint.PointerUpdateKind == PointerUpdateKind.LeftButtonReleased)
                 {
@@ -196,8 +220,31 @@ namespace Odyssey.UserInterface
 
         public virtual void Update(ITimeService time)
         {
-            if (AnimationController.HasAnimations)
-                AnimationController.Update(time);
+            if (Animator.HasAnimations && Animator.IsPlaying)
+                Animator.Update(time);
+
+            OnTick(new TimeEventArgs(time));
+        }
+
+        public bool CapturePointer()
+        {
+            if (CanRaiseEvents && IsEnabled)
+            {
+                Overlay.CaptureElement = this;
+                return true;
+            }
+            return false;
+        }
+
+        public void ReleaseCapture()
+        {
+            Overlay.CaptureElement = null;
+        }
+
+        public static Vector2 ScreenToLocalCoordinates(UIElement element, Vector2 screenCoordinates)
+        {
+            Vector2 offset =screenCoordinates - element.AbsolutePosition;
+            return element.Position + offset;
         }
     }
 }

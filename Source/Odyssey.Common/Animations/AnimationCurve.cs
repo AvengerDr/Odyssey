@@ -1,47 +1,163 @@
-﻿using System.Diagnostics;
-using System.Text.RegularExpressions;
+﻿#region License
+
+// Copyright © 2013-2014 Avengers UTD - Adalberto L. Simeone
+// 
+// The Odyssey Engine is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License Version 3 as published by
+// the Free Software Foundation.
+// 
+// The Odyssey Engine is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details at http://gplv3.fsf.org/
+
+#endregion
+
+#region Using Directives
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics.Contracts;
+using System.Globalization;
+using System.Linq;
 using System.Xml;
 using Odyssey.Content;
-using Odyssey.Engine;
 using Odyssey.Geometry;
-using Odyssey.Graphics;
 using Odyssey.Serialization;
 using Odyssey.Utilities.Logging;
 using Odyssey.Utilities.Reflection;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Reflection;
 using Odyssey.Utilities.Text;
+using SharpYaml.Tokens;
+
+#endregion
 
 namespace Odyssey.Animations
 {
-    public abstract class AnimationCurve<TKeyFrame> : ISerializableResource, IResource, IAnimationCurve, IEnumerable<TKeyFrame> 
+    public abstract class AnimationCurve<TKeyFrame> : ISerializableResource, IResource, IAnimationCurve, IEnumerable<TKeyFrame>
         where TKeyFrame : class, IKeyFrame
     {
-        public delegate object CurveFunction(TKeyFrame start, TKeyFrame end, float time);
+        public delegate object CurveFunction(TKeyFrame start, TKeyFrame end, float time, object options = null);
 
+        private string name;
         private readonly List<TKeyFrame> keyFrames;
-        private TimeSpan elapsedTime;
-        private object target;
-
-        internal Animation Animation { get; set; }
-
-        public int Length { get { return keyFrames.Count; } }
-
-        /// <inheritdoc/>
-        public float Duration { get { return keyFrames.Max(kf => kf.Time); }}
-        public string TargetProperty { get; internal set; }
-        public string TargetName { get; internal set; }
-        public string Name { get; set; }
-
-        public CurveFunction Function { get; set; }
+        private object functionOptions;
 
         public AnimationCurve()
         {
             keyFrames = new List<TKeyFrame>();
         }
+
+        public int Length
+        {
+            get { return keyFrames.Count; }
+        }
+
+        public CurveFunction Function { get; set; }
+
+        /// <inheritdoc/>
+        public float Duration
+        {
+            get { return keyFrames.Max(kf => kf.Time); }
+        }
+
+        public string TargetProperty { get; set; }
+        public string TargetName { get; internal set; }
+
+        public object Evaluate(float time)
+        {
+            TKeyFrame start = keyFrames.First();
+            TKeyFrame end = keyFrames.Last();
+            if (time <= start.Time)
+                return start.Value;
+            else if (time > end.Time)
+                return end.Value;
+
+            start = keyFrames.LastOrDefault(kf => kf.Time < time) ?? start;
+            end = keyFrames.First(kf => kf.Time > start.Time);
+            object result = Function(start, end, time, functionOptions);
+
+            return result;
+        }
+
+        public IKeyFrame this[int index]
+        {
+            get { return keyFrames[index]; }
+        }
+
+        public string Name
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(name))
+                    name = string.Format("{0}.{1}", TargetName, TargetProperty);
+                return name;
+            }
+            set
+            {
+                if (string.Equals(name, value))
+                    return;
+                name = value;
+            }
+        }
+
+        #region IEnumerable<TKeyFrame>
+
+        public IEnumerator<TKeyFrame> GetEnumerator()
+        {
+            return ((IEnumerable<TKeyFrame>) keyFrames).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return keyFrames.GetEnumerator();
+        }
+
+        #endregion
+
+        #region IResourceProvider
+
+        public void SerializeXml(IResourceProvider resourceProvider, XmlWriter xmlWriter)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DeserializeXml(IResourceProvider resourceProvider, XmlReader xmlReader)
+        {
+            TargetProperty = xmlReader.GetAttribute("TargetProperty");
+
+            TargetName = Text.ParseResource(xmlReader.GetAttribute("TargetName"));
+            if (!resourceProvider.ContainsResource(TargetName))
+                throw new InvalidOperationException(String.Format("No resource '{0}' found", TargetName));
+
+            string function = xmlReader.GetAttribute("Function");
+            if (!string.IsNullOrEmpty(function))
+            {
+                var method = ReflectionHelper.GetMethod(typeof(AnimationCurve<TKeyFrame>), function);
+                Function = (CurveFunction) method.CreateDelegate(typeof (CurveFunction));
+                string options = xmlReader.GetAttribute("Options");
+                switch (method.Name)
+                {
+                    case "SquareWave":
+                        functionOptions = float.Parse(options, CultureInfo.InvariantCulture);
+                        break;
+                }
+            }
+
+            xmlReader.ReadStartElement();
+
+            while (xmlReader.IsStartElement())
+            {
+                string type = xmlReader.LocalName;
+                var keyFrame = (ISerializableResource)Activator.CreateInstance(Type.GetType(String.Format("Odyssey.Animations.{0}, Odyssey.Common", type)));
+                keyFrame.DeserializeXml(resourceProvider, xmlReader);
+                AddKeyFrame((TKeyFrame) keyFrame);
+            }
+
+            xmlReader.ReadEndElement();
+        }
+
+        #endregion IXmlSerializable
 
         public void AddKeyFrame(TKeyFrame keyFrame)
         {
@@ -55,72 +171,27 @@ namespace Odyssey.Animations
             keyFrames.Clear();
         }
 
-        public object Evaluate(float time)
-        {
-            Contract.Requires<InvalidOperationException>(Length > 0, "Animation must contain at least one KeyFrames");
-            TKeyFrame start = keyFrames.First();
-            TKeyFrame end = keyFrames.Last();
-            if (time <= start.Time)
-                return start.Value;
-            else if (time > end.Time)
-                return end.Value;
-
-            start = keyFrames.FirstOrDefault(kf => kf.Time < time) ?? start;
-            end = keyFrames.First(kf => kf.Time > start.Time);
-            object result = Function(start, end, time);
-
-            return result;
-        }
-
-        #region IResourceProvider
-
-        public void SerializeXml(IResourceProvider resourceProvider, XmlWriter xmlWriter)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void DeserializeXml(IResourceProvider resourceProvider, XmlReader xmlReader)
-        {
-            TargetProperty = xmlReader.GetAttribute("TargetProperty");
-            TargetName = Text.ParseResource(xmlReader.GetAttribute("TargetName"));
-            if (!resourceProvider.ContainsResource(TargetName))
-                throw new InvalidOperationException(string.Format("No resource '{0}' found", TargetName));
-
-            xmlReader.ReadStartElement();
-
-            while (xmlReader.IsStartElement())
-            {
-                string type = xmlReader.LocalName;
-                var keyFrame = (ISerializableResource)Activator.CreateInstance(Type.GetType(String.Format("Odyssey.Animations.{0}, Odyssey.Common", type)));
-                keyFrame.DeserializeXml(resourceProvider, xmlReader);
-                AddKeyFrame((TKeyFrame)keyFrame);
-            }
-
-            xmlReader.ReadEndElement();
-        }
-
-        #endregion IXmlSerializable
-
         protected static float Map(float start, float end, float time)
         {
             float denominator = end - start;
             if (MathHelper.ScalarNearEqual(denominator, 0))
                 return 0;
 
-            float result = (time - start) / denominator;
+            float result = (time - start)/denominator;
             return MathHelper.Clamp(result, 0, 1);
         }
 
-        #region IEnumerable<TKeyFrame>
-        public IEnumerator<TKeyFrame> GetEnumerator()
+        public static object Discrete(TKeyFrame start, TKeyFrame end, float time, object options = null)
         {
-            return ((IEnumerable<TKeyFrame>)keyFrames).GetEnumerator();
+            return time < end.Time ? start.Value : end.Value;
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        public static object SquareWave(TKeyFrame start, TKeyFrame end, float time, object options = null)
         {
-            return keyFrames.GetEnumerator();
-        } 
-        #endregion
+            Contract.Requires<ArgumentNullException>(options != null, "options");
+            float subdivisions = (float) options;
+            float period = (end.Time - start.Time)/subdivisions;
+            return (time % period) < (period / 2) ? start.Value : end.Value;
+        }
     }
 }

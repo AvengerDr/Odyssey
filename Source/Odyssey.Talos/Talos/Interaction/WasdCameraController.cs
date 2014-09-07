@@ -12,7 +12,7 @@ namespace Odyssey.Talos.Interaction
         private CameraComponent camera;
         private IKeyboardService keyboardService;
 
-        public WasdCameraController()
+        public WasdCameraController(IServiceRegistry services) :base(services)
         {
             MovementSpeed = 3.0f;
             StrafeSpeed = 3f;
@@ -27,13 +27,13 @@ namespace Odyssey.Talos.Interaction
 
         public float YawSpeed { get; set; }
 
-        public override void BindToEntity(IEntity source)
+        public override void BindToEntity(Entity source)
         {
             base.BindToEntity(source);
             if (!source.TryGetComponent(out camera))
                 throw new InvalidOperationException(string.Format("'{0}' does not contain a {1}", source.Name, camera.GetType()));
 
-            keyboardService = source.Scene.Services.GetService<IKeyboardService>();
+            keyboardService = Services.GetService<IKeyboardService>();
 
             if (CameraBindings == null)
                 CameraBindings = new[]

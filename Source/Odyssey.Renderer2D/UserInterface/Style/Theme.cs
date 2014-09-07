@@ -4,14 +4,13 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
-using Odyssey.Animations;
 using Odyssey.Content;
 using Odyssey.Graphics;
 
 namespace Odyssey.UserInterface.Style
 {
     [ContentReader(typeof(ThemeReader))]
-    public sealed class Theme : IXmlSerializable, IResourceProvider, IResource
+    public sealed class Theme : IXmlSerializable, IResourceProvider
     {
         const string sControlStyle = "ControlStyle";
         private const string sResources = "Resources";

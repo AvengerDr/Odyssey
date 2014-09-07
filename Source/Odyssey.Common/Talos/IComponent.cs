@@ -1,8 +1,9 @@
-﻿namespace Odyssey.Talos
+﻿using Odyssey.Content;
+
+namespace Odyssey.Talos
 {
-    public interface IComponent
+    public interface IComponent : IResource
     {
-        string Name { get; }
         long KeyPart { get; }
         long Id { get; }
         bool Validate();

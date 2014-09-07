@@ -49,8 +49,8 @@ namespace Odyssey.Talos.Serialization
 
             foreach (var cParent in parentComponents)
             {
-                long newId = entityMap[cParent.Entity.Id];
-                cParent.Entity = Entities.First(kvp => kvp.Key.Id == newId).Key;
+                long newId = entityMap[cParent.Parent.Id];
+                cParent.Parent = Entities.First(kvp => kvp.Key.Id == newId).Key;
             }
 
         }

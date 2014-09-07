@@ -93,7 +93,8 @@ namespace Odyssey.UserInterface
             foreach (var point in pointerState.Points)
                 AddEvent(point);
 
-            foreach (var pointerEvent in recentEvents.Where(p => !p.Handled))
+            var unhandledEvents = recentEvents.Where(p => !p.Handled);
+            foreach (var pointerEvent in unhandledEvents)
                 Process(pointerEvent);
         }
 

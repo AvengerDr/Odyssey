@@ -19,6 +19,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using Odyssey.Animations;
 using Odyssey.Serialization;
+using Odyssey.UserInterface.Behaviors;
 using Odyssey.UserInterface.Controls;
 using Odyssey.UserInterface.Data;
 using Odyssey.UserInterface.Serialization;
@@ -38,14 +39,15 @@ namespace Odyssey.UserInterface
     /// The <b>UIElement</b> class is the root class of all controls in the library. It provides
     /// inheritors with a comprehensive range of properties and methods common to all controls.
     /// </summary>
-    public abstract partial class UIElement : Component, IUIElement, IComparable<UIElement>, ISerializableResource
+    public abstract partial class UIElement : Component, IUIElement, IAnimator, IComparable<UIElement>, ISerializableResource
     {
         protected static readonly Dictionary<string, int> TypeCounter = new Dictionary<string, int>();
 
         #region Private fields
 
         private readonly Dictionary<string, BindingExpression> bindings;
-        private readonly AnimationController animationController;
+        private readonly BehaviorCollection behaviors;
+        private readonly AnimationController animator;
         private RectangleF boundingRectangle;
         private bool canRaiseEvents = true;
         private bool designMode = true;
@@ -80,7 +82,8 @@ namespace Odyssey.UserInterface
 
             Name = string.Format("{0}{1}", type, TypeCounter[type]);
             bindings = new Dictionary<string, BindingExpression>();
-            animationController = new AnimationController(this);
+            behaviors = new BehaviorCollection();
+            animator = new AnimationController(this);
         }
 
         #endregion Constructors
@@ -107,45 +110,52 @@ namespace Odyssey.UserInterface
             return string.Format("{0}: '{1}' [{2}] D:{3}", GetType().Name, Name, AbsolutePosition, Depth);
         }
 
-        /// <summary>
-        /// Computes the absolute position of the control, depending on the inherited position of
-        /// the parent. This method is called when its position or the parent changes.
-        /// </summary>
-        protected internal virtual void Layout()
+        public virtual void Layout()
+        {
+            Measure();
+            Arrange();
+        }
+
+        protected internal virtual void Arrange()
         {
             if (parent != null)
             {
                 Vector2 oldAbsolutePosition = AbsolutePosition;
-                Vector2 newAbsolutePosition = new Vector2(parent.AbsolutePosition.X + position.X,
-                    parent.AbsolutePosition.Y + position.Y);
+                Vector2 newAbsolutePosition = parent.AbsolutePosition + parent.TopLeftPosition + new Vector2(Margin.Left, Margin.Top) + position;
 
                 if (!newAbsolutePosition.Equals(oldAbsolutePosition))
                 {
                     AbsolutePosition = newAbsolutePosition;
                 }
 
-                Measure();
+                UpdateLayoutInternal();
                 OnLayoutUpdated(EventArgs.Empty);
             }
         }
 
-        protected virtual void Measure()
+        protected internal virtual void Measure()
         {
-            if (Width == 0 && Parent != null)
+            if (Width == 0)
             {
-                Width = Parent.Width - Margin.Horizontal;
-                Control parentControl = (Parent as Control);
-                if (parentControl != null)
-                    Width -= parentControl.Padding.Horizontal;
+                float parentWidth = Parent.Width;
+                Width = parentWidth - Margin.Horizontal;
             }
-            if (Height == 0 && Parent != null)
+            if (Height == 0)
             {
-                Height = Parent.Height - Margin.Vertical;
-                Control parentControl = (Parent as Control);
-                if (parentControl != null)
-                    Height -= parentControl.Padding.Vertical;
+                float parentHeight = Parent.Height;
+                Height = parentHeight - Margin.Vertical;
             }
+            
+            var parentControl = Parent as Control;
+            if (parentControl != null)
+            {
+                Width -= parentControl.Padding.Horizontal;
+                Height -= parentControl.Padding.Vertical;
+            }
+        }
 
+        internal void UpdateLayoutInternal()
+        {
             boundingRectangle = new RectangleF(AbsolutePosition.X, AbsolutePosition.Y, Width, Height);
             transform = Matrix3x2.Translation(AbsolutePosition.X, AbsolutePosition.Y);
         }

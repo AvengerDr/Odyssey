@@ -20,7 +20,7 @@ namespace Odyssey.Talos.Systems
 
         public override void Process(ITimeService time)
         {
-            foreach (IEntity entity in Entities)
+            foreach (Entity entity in Entities)
             {
                 if (!entity.IsEnabled)
                     continue;
@@ -65,9 +65,9 @@ namespace Odyssey.Talos.Systems
 
                 cTransform.Local = mLocalWorld;
 
-                if (entity.TryGetComponent(out cParent) && cParent.Entity != null)
+                if (entity.TryGetComponent(out cParent) && cParent.Parent != null && cParent.Parent.ContainsComponent<TransformComponent>())
                 {
-                    var cParentTransform = cParent.Entity.GetComponent<TransformComponent>();
+                    var cParentTransform = cParent.Parent.GetComponent<TransformComponent>();
                     cTransform.World = cTransform.Local*cParentTransform.World;
                 }
                 else
@@ -77,7 +77,7 @@ namespace Odyssey.Talos.Systems
 
         public override void AfterUpdate()
         {
-            foreach (IEntity entity in Scene.SystemMap.SelectAllEntities(this))
+            foreach (Entity entity in Scene.SystemMap.SelectAllEntities(this))
             {
                 if (!entity.IsEnabled)
                     continue;

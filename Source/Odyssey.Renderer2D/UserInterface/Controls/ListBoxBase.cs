@@ -18,12 +18,12 @@ namespace Odyssey.UserInterface.Controls
         {
         }
 
-        protected override void Arrange()
+        protected internal override void Arrange()
         {
-            if (Children.IsEmpty)
+            if (Controls.IsEmpty)
                 return;
 
-            UserInterface.Style.Layout.UpdateLayoutHorizontal(this, Children);
+            UserInterface.Style.Layout.UpdateLayoutHorizontal(this, Controls);
         }
     }
 }

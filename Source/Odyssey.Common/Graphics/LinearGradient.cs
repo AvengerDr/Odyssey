@@ -15,11 +15,11 @@ namespace Odyssey.Graphics
         public Vector2 EndPoint { get; private set; }
 
         public LinearGradient()
-            : base(string.Format("{0}{1:D2}", typeof(LinearGradient).Name, ++count), GradientType.Linear)
+            : base(string.Format("{0}{1:D2}", typeof(LinearGradient).Name, ++count), ColorType.LinearGradient)
         {
         }
 
-        public LinearGradient(string name, Vector2 startPoint, Vector2 endPoint, IEnumerable<GradientStop> gradientStops, ExtendMode extendMode = ExtendMode.Clamp) : base(name, gradientStops, extendMode, GradientType.Linear)
+        public LinearGradient(string name, Vector2 startPoint, Vector2 endPoint, IEnumerable<GradientStop> gradientStops, ExtendMode extendMode = ExtendMode.Clamp) : base(name, gradientStops, extendMode, ColorType.LinearGradient)
         {
             Contract.Requires<ArgumentNullException>(gradientStops != null, "gradientStops");
             this.StartPoint = startPoint;

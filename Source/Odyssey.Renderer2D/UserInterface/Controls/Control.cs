@@ -12,10 +12,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Odyssey.Content;
 using Odyssey.Graphics;
-using Odyssey.Graphics.Shapes;
+using Odyssey.Graphics.Drawing;
 using Odyssey.UserInterface.Style;
+using Odyssey.Utilities.Logging;
 using SharpDX;
 
 namespace Odyssey.UserInterface.Controls
@@ -23,7 +25,6 @@ namespace Odyssey.UserInterface.Controls
     public abstract class Control : UIElement, IControl, IResourceProvider
     {
         public const string DefaultText = "Default";
-        public const string EmptyStyle = "Empty";
 
         private string controlStyleClass;
         private ControlStyle style;
@@ -79,6 +80,8 @@ namespace Odyssey.UserInterface.Controls
             }
         }
 
+        protected bool IsVisual { get { return VisualState != null; } }
+
         /// <summary>
         /// Gets or sets the <see cref = "TextDescription" /> to use for this control.
         /// </summary>
@@ -117,18 +120,27 @@ namespace Odyssey.UserInterface.Controls
 
         public override void Render()
         {
+            if (!IsVisual)
+                return;
+
             foreach (IShape shape in VisualState)
                 shape.Render();
         }
 
-        internal override UIElement Copy()
+        protected internal override UIElement Copy()
         {
             Control newControl = (Control)base.Copy();
             newControl.Style = Style;
             newControl.Padding = Padding;
             newControl.TextStyleClass = TextStyleClass;
-
+            CopyEvents(typeof(Control), this, newControl);
             return newControl;
+        }
+
+        protected internal override void Measure()
+        {
+            base.Measure();
+            TopLeftPosition = new Vector2(Padding.Left, Padding.Top);
         }
 
         protected virtual void ApplyControlDescription()
@@ -136,6 +148,11 @@ namespace Odyssey.UserInterface.Controls
             if (StyleClass == ControlStyle.Empty)
                 return;
 
+            if (!Overlay.Theme.ContainsResource(StyleClass))
+            {
+                LogEvent.UserInterface.Warning("Style '{0}' not found", StyleClass);
+                return;
+            }
             var controlStyle = Overlay.Theme.GetResource<ControlStyle>(StyleClass);
 
             if (Width == 0 && controlStyle.Width > 0)
@@ -180,7 +197,7 @@ namespace Odyssey.UserInterface.Controls
         protected override void OnDesignModeChanged(ControlEventArgs e)
         {
             base.OnDesignModeChanged(e);
-            if (ActiveStatus == ControlStatus.None)
+            if (!IsVisual || ActiveStatus == ControlStatus.None)
                 return;
 
             foreach (Shape element in VisualState)
@@ -219,19 +236,35 @@ namespace Odyssey.UserInterface.Controls
 
         #region IResourceProvider
 
-        TResource IResourceProvider.GetResource<TResource>(string resourceName)
+        protected virtual bool ContainsResource(string resourceName)
+        {
+            return VisualState.ContainsResource(resourceName);
+        }
+
+        protected virtual TResource GetResource<TResource>(string resourceName)
+            where TResource : class, IResource
         {
             return GetShape(resourceName) as TResource;
         }
 
-        IEnumerable<IResource> IResourceProvider.Resources
+        protected virtual IEnumerable<IResource> Resources
         {
             get { return VisualState; }
         }
 
+        TResource IResourceProvider.GetResource<TResource>(string resourceName)
+        {
+            return GetResource<TResource>(resourceName);
+        }
+
+        IEnumerable<IResource> IResourceProvider.Resources
+        {
+            get { return Resources; }
+        }
+
         bool IResourceProvider.ContainsResource(string resourceName)
         {
-            return VisualState.ContainsResource(resourceName);
+            return ContainsResource(resourceName) ;
         }
 
         #endregion

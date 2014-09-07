@@ -1,4 +1,5 @@
 ﻿using System;
+using SharpDX;
 
 namespace Odyssey.Geometry
 {
@@ -17,7 +18,7 @@ namespace Odyssey.Geometry
         /// <summary>
         /// A value specifying the approximation of π/2 which is 90 degrees.
         /// </summary>
-        public const float PiOver2 = 1.570796326794896619f;
+        public const float PiOverTwo = 1.570796326794896619f;
 
         /// <summary>
         /// A value specifying the approximation of π/4 which is 45 degrees.
@@ -102,6 +103,11 @@ namespace Odyssey.Geometry
             if (Math.Abs(value) < EpsilonD)
                 return true;
             return false;
+        }
+
+        public static int Mod(int value, int modulo)
+        {
+             return (value%modulo + modulo)%modulo;
         }
 
         public static bool ScalarNearEqual(float s1, float s2, float tolerance = Epsilon)

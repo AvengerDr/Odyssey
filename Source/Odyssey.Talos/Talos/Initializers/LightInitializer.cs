@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Odyssey.Engine;
-using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Talos.Components;
 using Odyssey.Talos.Nodes;
 using SharpDX;
-using EngineReference = Odyssey.Graphics.Effects.EngineReference;
 
 namespace Odyssey.Talos.Initializers
 {

@@ -71,15 +71,20 @@ namespace Odyssey.Graphics
             return from == null ? null : from.Resource ?? null;
         }
 
+        public static implicit operator ComObject(Brush from)
+        {
+            return from == null ? null : from.Resource;
+        }
+
         public static Brush FromColorResource(Direct2DDevice device, ColorResource colorResource)
         {
             switch (colorResource.Type)
             {
-                case GradientType.SolidColor:
+                case ColorType.SolidColor:
                     return SolidColorBrush.New(colorResource.Name, device, (SolidColor)colorResource);
-                case GradientType.Linear:
+                case ColorType.LinearGradient:
                     return LinearGradientBrush.New(colorResource.Name, device, (LinearGradient)colorResource);
-                case GradientType.Radial:
+                case ColorType.RadialGradient:
                     return RadialGradientBrush.New(colorResource.Name, device, (RadialGradient) colorResource);
                 default:
                     throw new ArgumentOutOfRangeException(string.Format("Brush type '{0}' is not valid", colorResource.Type));

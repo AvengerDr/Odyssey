@@ -5,7 +5,7 @@ namespace Odyssey.UserInterface.Controls
 {
     public abstract class PanelBase : ContainerControl
     {
-        private const string ControlTag = "Panel";
+        protected const string ControlTag = "Panel";
 
         #region Constructors
 
@@ -13,21 +13,9 @@ namespace Odyssey.UserInterface.Controls
         {
         }
 
-        protected PanelBase(string tag, string controlClass)
+        protected PanelBase(string controlClass)
             : base(controlClass)
         {}
-
-        protected internal override void Layout()
-        {
-            base.Layout();
-            Arrange();
-        }
-
-        protected override void Arrange()
-        {
-            foreach (UIElement element in Controls)
-                element.Position += TopLeftPosition;
-        }
 
         #endregion
     }

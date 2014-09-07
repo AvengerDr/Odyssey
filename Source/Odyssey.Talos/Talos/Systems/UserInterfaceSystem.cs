@@ -34,7 +34,7 @@ namespace Odyssey.Talos.Systems
 
         public void Render(ITimeService time)
         {
-            foreach (IEntity entity in Entities)
+            foreach (Entity entity in Entities)
             {
                 var cUserInterface = entity.GetComponent<UserInterfaceComponent>(tUserInterface.KeyPart);
                 cUserInterface.Overlay.Display();
@@ -57,7 +57,7 @@ namespace Odyssey.Talos.Systems
 
         public override void Process(ITimeService time)
         {
-            foreach (IEntity entity in Entities)
+            foreach (Entity entity in Entities)
             {
                 var cUserInterface = entity.GetComponent<UserInterfaceComponent>(tUserInterface.KeyPart);
                 cUserInterface.UserInterfaceState.Update();
@@ -67,7 +67,8 @@ namespace Odyssey.Talos.Systems
 
         public override void Unload()
         {
-            Overlay.Dispose();
+            if (Overlay!=null)
+                Overlay.Dispose();
         }
     }
 }

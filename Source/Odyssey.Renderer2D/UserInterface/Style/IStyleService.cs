@@ -1,15 +1,16 @@
 using Odyssey.Content;
+using Odyssey.Engine;
 using Odyssey.Graphics;
-using SharpDX.Direct3D11;
 using SharpDX.DirectWrite;
 
 namespace Odyssey.UserInterface.Style
 {
     public interface IStyleService : IResourceProvider
     {
-        TextDescription GetTextStyle(string themenName, string id);
+        TextDescription GetTextStyle(string themeName, string id);
         FontCollection FontCollection { get; }
         Theme GetTheme(string themeName);
-        void AddResource(IResource resource);
+        void AddResource(IResource resource, bool shared = true);
+        Brush CreateOrRetrieveColorResource(Direct2DDevice device, ColorResource colorResource, bool shared = true);
     }
 }

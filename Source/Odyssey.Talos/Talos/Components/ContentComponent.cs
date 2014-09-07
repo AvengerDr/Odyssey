@@ -17,7 +17,7 @@ namespace Odyssey.Talos.Components
                 if (assetName != value)
                 {
                     assetName = value;
-                    RaisePropertyChange("AssetName");
+                    RaisePropertyChanged();
                 }
             }
         }
@@ -34,9 +34,12 @@ namespace Odyssey.Talos.Components
         /// </summary>
         public abstract void Initialize();
         public abstract bool IsInited { get; }
+        public bool IsProcedurallyGenerated { get; set; }
 
         public override bool Validate()
         {
+            if (IsProcedurallyGenerated)
+                return true;
             bool test = Content.Contains(AssetName);
             if (!test)
                 LogEvent.Engine.Error("[{0}] not found.", AssetName);

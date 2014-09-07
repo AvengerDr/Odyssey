@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Odyssey.Content;
 using Odyssey.Graphics;
-using Odyssey.Graphics.Shapes;
+using Odyssey.Graphics.Drawing;
 using Odyssey.UserInterface.Controls;
 using SharpDX;
 
 namespace Odyssey.UserInterface.Style
 {
-    public sealed class VisualState : Component, IResource, IResourceProvider, IEnumerable<Shape>
+    public sealed class VisualState : Component, IResourceProvider, IEnumerable<Shape>
     {
         private Shape[] shapes;
 
@@ -40,9 +40,9 @@ namespace Odyssey.UserInterface.Style
                 newShape.DesignMode = false;
                 newShape.Position = new Vector2(control.Width, control.Height) * shape.Position;
                 shapeList.Add(newShape);
-
             }
-            control.AnimationController.AddAnimations(visualStateDefinition.Animations);
+
+            control.Animator.AddAnimations(visualStateDefinition.Animations);
             visualState.shapes = shapeList.ToArray();
             return visualState;
         }
@@ -80,7 +80,6 @@ namespace Odyssey.UserInterface.Style
             get { return shapes[index]; }
         }
 
-
         #region IEnumerable<Shape>
 
         public IEnumerator<Shape> GetEnumerator()
@@ -95,8 +94,5 @@ namespace Odyssey.UserInterface.Style
         }
 
         #endregion
-
-
-        
     }
 }

@@ -77,7 +77,7 @@ namespace Odyssey.Utilities.Reflection
                 string arrayName;
 
                 int index;
-                if (IsExpressionArray(subPath, out arrayName, out index))
+                if (Text.Text.IsExpressionArray(subPath, out arrayName, out index))
                 {
                     expression = arrayName;
                 }
@@ -228,26 +228,6 @@ namespace Odyssey.Utilities.Reflection
         public void WriteValue<TValue>(TValue value)
         {
             instructions.Last.Value.WriteMethod(value);
-        }
-
-        static bool IsExpressionArray(string expression, out string arrayName, out int index)
-        {
-            const string rArrayPattern = @"(?<array>\w*)\[(?<index>\d+)\]";
-            Regex rArray = new Regex(rArrayPattern);
-
-            Match match = rArray.Match(expression);
-            if (match.Success)
-            {
-                arrayName = match.Groups["array"].Value;
-                index = int.Parse(match.Groups["index"].Value);
-                return true;
-            }
-            else
-            {
-                arrayName = string.Empty;
-                index = -1;
-                return false;
-            }
         }
 
         internal struct WalkerInstruction

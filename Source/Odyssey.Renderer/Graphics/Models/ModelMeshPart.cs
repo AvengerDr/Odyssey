@@ -41,7 +41,6 @@ namespace Odyssey.Graphics.Models
             numPrimitives = (int)Math.Round(numPrimitives*value);
             IndexBuffer.Count = numPrimitives * 3;
         }
-        
 
         /// <summary>
         /// The index buffer range for this mesh part.

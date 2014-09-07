@@ -1,7 +1,9 @@
-﻿namespace Odyssey.Graphics
+﻿using Odyssey.Engine;
+
+namespace Odyssey.Graphics
 {
     public interface IRenderable
     {
-        void Render();
+        void Render(ITimeService time);
     }
 }

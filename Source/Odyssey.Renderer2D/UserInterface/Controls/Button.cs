@@ -18,7 +18,7 @@
 using Odyssey.Graphics;
 using Odyssey.Interaction;
 using SharpDX;
-using Rectangle = Odyssey.Graphics.Shapes.Rectangle;
+using Rectangle = Odyssey.Graphics.Drawing.Rectangle;
 
 #endregion Using Directives
 
@@ -35,18 +35,18 @@ namespace Odyssey.UserInterface.Controls
         {
             base.OnPointerEnter(e);
             string animationName = ControlStatus.Highlighted.ToString();
-            var animation = AnimationController[animationName];
+            var animation = Animator[animationName];
             animation.Speed = 1.0f;
-            AnimationController.Play(animationName);
+            Animator.Play(animationName);
         }
 
         protected override void OnPointerExited(PointerEventArgs e)
         {
             base.OnPointerExited(e);
             string animationName = ControlStatus.Highlighted.ToString();
-            var animation = AnimationController[animationName];
+            var animation = Animator[animationName];
             animation.Speed = -1.0f;
-            AnimationController.Play(animationName);
+            Animator.Play(animationName);
         }
     }
 }

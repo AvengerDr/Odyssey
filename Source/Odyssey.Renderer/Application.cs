@@ -15,6 +15,7 @@
 
 #region Using Directives
 
+using Odyssey.Animations;
 using Odyssey.Content;
 using Odyssey.Engine;
 using Odyssey.Graphics;
@@ -49,9 +50,11 @@ namespace Odyssey
         private bool forceElapsedTimeToZero;
         private bool isEndRunRequired;
         private bool isExiting;
+        private bool isFirstUpdateDone;
         private TimeSpan lastFrameElapsedAppTime;
         private int nextLastUpdateCountIndex;
-        private IScene scene;
+        private IUpdateable updateCallback;
+        private IRenderable renderCallback;
         private bool suppressDraw;
         private TimeSpan totalTime;
 
@@ -83,11 +86,12 @@ namespace Odyssey
 
             // Setup Content Manager
             contentManager = new ContentManager(services);
-            contentManager.AddMapping(AssetType.EngineReferences.ToString(), typeof(EngineReferenceCollection));
-            contentManager.AddMapping(AssetType.Model.ToString(), typeof(Model));
-            contentManager.AddMapping(AssetType.Effect.ToString(), typeof(ShaderCollection));
-            contentManager.AddMapping(AssetType.Texture2D.ToString(), typeof(Texture2D));
-            contentManager.AddMapping(AssetType.TextureCube.ToString(), typeof(TextureCube));
+            contentManager.AddMapping(AssetType.EngineReferences, typeof(EngineReferenceCollection));
+            contentManager.AddMapping(AssetType.Model, typeof(Model));
+            contentManager.AddMapping(AssetType.Effect, typeof(ShaderCollection));
+            contentManager.AddMapping(AssetType.Texture2D, typeof(Texture2D));
+            contentManager.AddMapping(AssetType.TextureCube, typeof(TextureCube));
+            contentManager.AddMapping(AssetType.Cutscene, typeof(Cutscene));
 
             var additionalServices = ReflectionHelper.GetAttributes<RequiredServiceAttribute>(GetType());
             foreach (var requiredService in additionalServices)
@@ -125,11 +129,6 @@ namespace Odyssey
         /// Gets a value indicating whether is running.
         /// </summary>
         public bool IsRunning { get; private set; }
-
-        public IScene Scene
-        {
-            get { return scene; }
-        }
 
         public IServiceRegistry Services
         {
@@ -223,9 +222,14 @@ namespace Odyssey
             }
         }
 
-        public void SetScene(IScene scene)
+        public void SetUpdateCallback(IUpdateable updateCallback)
         {
-            this.scene = scene;
+            this.updateCallback = updateCallback;
+        }
+
+        public void SetRenderCallback(IRenderable renderCallback)
+        {
+            this.renderCallback = renderCallback;
         }
 
         /// <summary>
@@ -329,7 +333,7 @@ namespace Odyssey
                 appTime.Update(totalTime, singleFrameElapsedTime, drawRunningSlowly);
                 try
                 {
-                    scene.Update(appTime);
+                    updateCallback.Update(appTime);
 
                     // If there is no exception, then we can draw the frame
                     suppressNextDraw &= suppressDraw;
@@ -373,8 +377,9 @@ namespace Odyssey
             appTime.Update(totalTime, TimeSpan.Zero, false);
             appTime.FrameCount = 0;
 
-            // Run the first time an update
-            scene.Update(appTime);
+            // Run an update for the first time 
+            updateCallback.Update(appTime);
+            isFirstUpdateDone = true;
         }
 
         /// <summary>
@@ -410,9 +415,6 @@ namespace Odyssey
                     {
                         applicationPlatform.Dispose();
                     }
-
-                    if (scene != null)
-                        scene.Unload();
 
                 }
             }
@@ -471,12 +473,12 @@ namespace Odyssey
         {
             try
             {
-                if (!isExiting && scene.IsFirstUpdateDone && !Window.IsMinimized && BeginDraw())
+                if (!isExiting && isFirstUpdateDone && !Window.IsMinimized && BeginDraw())
                 {
                     appTime.Update(totalTime, lastFrameElapsedAppTime, drawRunningSlowly);
                     appTime.FrameCount++;
 
-                    scene.Render(appTime);
+                    renderCallback.Render(appTime);
 
                     EndDraw();
                 }

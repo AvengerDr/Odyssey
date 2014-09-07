@@ -29,15 +29,15 @@ namespace Odyssey.UserInterface.Controls
             }
         }
 
-        protected override void Arrange()
+        protected internal override void Arrange()
         {
-            if (Children.IsEmpty)
+            if (Controls.IsEmpty)
                 return;
 
             if (Orientation == Orientation.Horizontal)
-                UserInterface.Style.Layout.UpdateLayoutHorizontal(this, Children);
+                UserInterface.Style.Layout.UpdateLayoutHorizontal(this, Controls);
             else
-                UserInterface.Style.Layout.UpdateLayoutVertical(this, Children);
+                UserInterface.Style.Layout.UpdateLayoutVertical(this, Controls);
         }
     }
 }

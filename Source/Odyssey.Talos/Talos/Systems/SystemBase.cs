@@ -53,7 +53,7 @@ namespace Odyssey.Talos.Systems
             get { return Scene.Services; }
         }
 
-        protected IEnumerable<IEntity> Entities
+        protected IEnumerable<Entity> Entities
         {
             get { return Scene.SystemMap.SelectAllEntities(this); }
         }
@@ -65,7 +65,7 @@ namespace Odyssey.Talos.Systems
 
         protected bool HasEntities
         {
-            get { return Scene.SystemHasEntities(this); }
+            get { return Scene.SystemMap.SystemHasEntities(this); }
         }
 
         public bool IsEnabled { get; set; }
@@ -92,7 +92,7 @@ namespace Odyssey.Talos.Systems
         public void EnqueueMessage<TMessage>(TMessage message)
             where TMessage : Message
         {
-            messageQueue.Enqueue(message);
+            messageQueue.Enqueue<TMessage>(message);
         }
 
         public abstract void Start();
@@ -108,6 +108,20 @@ namespace Odyssey.Talos.Systems
         {
         }
 
+        public void RegisterEntity(Entity entity)
+        {
+            Scene.SystemMap.RegisterEntityToSystem(entity, this);
+        }
+
+        public void UnregisterEntity(Entity entity)
+        {
+            Scene.SystemMap.UnregisterEntityFromSystem(entity, this);
+        }
+
+        public bool IsEntityRegistered(Entity entity)
+        {
+            return Scene.SystemMap.IsEntityRegisteredToSystem(entity, this);
+        }
 
         [Pure]
         public bool Supports(long entityKey)

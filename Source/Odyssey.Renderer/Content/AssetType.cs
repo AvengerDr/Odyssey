@@ -1,13 +1,14 @@
 namespace Odyssey.Content
 {
-    internal enum AssetType
+    internal struct AssetType
     {
-        Undefined,
-        EngineReferences,
-        Model,
-        Texture2D,
-        TextureCube,
-        Effect,
-        Scene
+        public const string EngineReferences = "EngineReferences";
+        public const string Model = "Model";
+        public const string Texture2D = "Texture2D";
+        public const string TextureCube = "TextureCube";
+        public const string Effect = "Effect";
+        public const string Scene = "Scene";
+        public const string Cutscene = "Cutscene";
     }
+    
 }

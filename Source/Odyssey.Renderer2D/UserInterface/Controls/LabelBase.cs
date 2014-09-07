@@ -13,12 +13,31 @@
 
 #endregion License
 
+using System;
+using Odyssey.Graphics;
+using Odyssey.UserInterface.Style;
+using SharpDX.Direct2D1;
+using SharpDX.DirectWrite;
+using Brush = Odyssey.Graphics.Brush;
+
 namespace Odyssey.UserInterface.Controls
 {
     public abstract class LabelBase : Control
     {
+        protected const string DefaultTextClass = "Default";
         private const string ControlTag = "Default";
         private string text;
+        private TextFormat textFormat;
+
+        protected TextFormat TextFormat
+        {
+            get { return textFormat; }
+            set { textFormat = value; }
+        }
+
+        public Brush Foreground { get; set; }
+
+        public event EventHandler<TextEventArgs> TextChanged;
 
         protected LabelBase()
             : this(ControlTag)
@@ -36,9 +55,37 @@ namespace Odyssey.UserInterface.Controls
             get { return text; }
             set
             {
-                if (text != value)
+                if (!string.Equals(text, value))
+                {
+                    string oldValue = text;
                     text = value;
+                    OnTextChanged(new TextEventArgs(text, oldValue));
+                }
             }
+        }
+
+        protected virtual void OnTextChanged(TextEventArgs e)
+        {
+            RaiseEvent(TextChanged, this, e);
+        }
+
+        protected override void OnInitializing(ControlEventArgs e)
+        {
+            DeviceContext context = Device;
+            if (TextDescription == default(TextDescription))
+                ApplyTextDescription();
+
+            var styleService = Overlay.Services.GetService<IStyleService>();
+            if (Foreground == null)
+            {
+                SolidColor color = new SolidColor(string.Format("{0}.Foreground", Name), TextDescription.Color);
+                Foreground = styleService.CreateOrRetrieveColorResource(Device, color);
+            }
+
+            textFormat = ToDispose(TextDescription.ToTextFormat(Device.Services));
+            context.TextAntialiasMode = SharpDX.Direct2D1.TextAntialiasMode.Grayscale;
+            if (string.IsNullOrEmpty(Text))
+                Text = Name;
         }
     }
 }

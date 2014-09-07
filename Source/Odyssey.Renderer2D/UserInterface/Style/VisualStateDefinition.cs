@@ -3,7 +3,7 @@ using System.Linq;
 using Odyssey.Animations;
 using Odyssey.Content;
 using Odyssey.Graphics;
-using Odyssey.Graphics.Shapes;
+using Odyssey.Graphics.Drawing;
 using System.Collections.Generic;
 using Odyssey.Serialization;
 using Odyssey.UserInterface.Controls;
@@ -14,6 +14,8 @@ namespace Odyssey.UserInterface.Style
     {
         private readonly List<Shape> shapes;
         private readonly List<Animation> animations;
+
+        public string Name { get; set; }
 
         public VisualStateDefinition()
         {
@@ -44,6 +46,8 @@ namespace Odyssey.UserInterface.Style
             const string sAnimation = "Animation";
             const string sAnimations = "Animations";
 
+            Name = xmlReader.GetAttribute("Name");
+
             if (!xmlReader.ReadToDescendant(sShapes))
                 throw new InvalidOperationException(String.Format("{0}' element not found", sShapes));
 
@@ -52,7 +56,7 @@ namespace Odyssey.UserInterface.Style
 
             while (xmlReader.IsStartElement())
             {
-                string typeName = string.Format("Odyssey.Graphics.Shapes.{0}", xmlReader.Name);
+                string typeName = string.Format("Odyssey.Graphics.Drawing.{0}", xmlReader.Name);
                 try
                 {
                     var shape = (Shape) Activator.CreateInstance(Type.GetType(typeName));

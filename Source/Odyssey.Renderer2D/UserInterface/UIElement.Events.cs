@@ -16,6 +16,7 @@
 #region Using Directives
 
 using System.Globalization;
+using Odyssey.Engine;
 using Odyssey.Interaction;
 using Odyssey.UserInterface.Controls;
 using System;
@@ -287,6 +288,8 @@ namespace Odyssey.UserInterface
 
         public event EventHandler<ControlEventArgs> Initializing;
 
+        public event EventHandler<TimeEventArgs> Tick;
+
         /// <summary>
         /// Occurs when the control's layout changes.
         /// </summary>
@@ -345,6 +348,11 @@ namespace Odyssey.UserInterface
             RaiseEvent(GotFocus, this, e);
         }
 
+        protected virtual void OnTick(TimeEventArgs e)
+        {
+            RaiseEvent(Tick, this, e);
+        }
+
         /// <summary>
         /// Raises the <see cref="HighlightedChanged"/> event.
         /// </summary>
@@ -389,7 +397,6 @@ namespace Odyssey.UserInterface
         /// data.</param>
         protected virtual void OnMove(EventArgs e)
         {
-            Layout();
             RaiseEvent(Move, this, e);
         }
 

@@ -2,7 +2,7 @@
 
 using Odyssey.Content;
 using Odyssey.Graphics;
-using Odyssey.Graphics.Shapes;
+using Odyssey.Graphics.Drawing;
 using Odyssey.UserInterface.Style;
 using SharpDX;
 using SharpDX.Direct2D1;
@@ -15,7 +15,7 @@ using D2DFactory = SharpDX.Direct2D1.Factory1;
 using Device = SharpDX.Direct2D1.Device;
 using DeviceContext = SharpDX.Direct2D1.DeviceContext;
 using DWFactory = SharpDX.DirectWrite.Factory1;
-using Ellipse = Odyssey.Graphics.Shapes.Ellipse;
+using Ellipse = Odyssey.Graphics.Drawing.Ellipse;
 using FactoryType = SharpDX.Direct2D1.FactoryType;
 
 #endregion Using Directives
@@ -134,7 +134,7 @@ namespace Odyssey.Engine
         internal void CreateResources()
         { }
 
-        public void DrawGeometry(Graphics.Shapes.Geometry geometry, Brush brush)
+        public void DrawGeometry(Graphics.Drawing.Geometry geometry, Brush brush)
         {
             deviceContext.DrawGeometry(geometry, brush);
         }
@@ -154,7 +154,6 @@ namespace Odyssey.Engine
             deviceContext.FillEllipse(ellipse, brush);
         }
 
-
         public void DrawLine(Line line, Brush brush, float strokeThickness = 1.0f)
         {
             deviceContext.DrawLine(line.P0, line.P1, brush, strokeThickness);
@@ -166,14 +165,19 @@ namespace Odyssey.Engine
             deviceContext.DrawText(text, textFormat, layoutRect, foregroundBrush, textOptions);
         }
 
-        public void FillGeometry(Graphics.Shapes.Geometry geometry, Brush brush)
+        public void FillGeometry(Graphics.Drawing.Geometry geometry, Brush brush)
         {
             deviceContext.FillGeometry(geometry, brush);
         }
 
         public void FillRectangle(Shape shape, Brush brush)
         {
-            deviceContext.FillRectangle(shape.BoundingRectangle, brush);
+           FillRectangle(shape.BoundingRectangle, brush);
+        }
+
+        public void FillRectangle(RectangleF rectangle, Brush brush)
+        {
+            deviceContext.FillRectangle(rectangle, brush);
         }
 
         public void SetTextAntialias(AntialiasMode antialiasMode)

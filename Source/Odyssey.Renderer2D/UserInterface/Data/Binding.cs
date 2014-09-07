@@ -17,7 +17,11 @@ namespace Odyssey.UserInterface.Data
 {
     public class Binding
     {
-        public Binding(string path, string targetElement)
+        public Binding() : this(string.Empty, string.Empty)
+        {
+        }
+
+        public Binding(string targetElement, string path)
         {
             Path = path;
             TargetElement = targetElement;

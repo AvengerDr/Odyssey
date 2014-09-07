@@ -26,7 +26,7 @@ namespace Odyssey.Talos.Nodes
 
         internal Vector3 WorldPosition { get; set; }
 
-        protected LightNode(IEntity entity)
+        protected LightNode(Entity entity)
         {
             this.entity = entity;
             cPosition = entity.GetComponent<PositionComponent>();

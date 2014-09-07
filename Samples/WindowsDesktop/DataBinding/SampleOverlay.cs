@@ -45,7 +45,7 @@ namespace MiniUI
                 },
                 Bindings = new Dictionary<string, Binding>
                 {
-                    {"Text", new Binding("CommandName", "Label")},
+                    {"Text", new Binding("Label", "CommandName")},
                 }
             };
 

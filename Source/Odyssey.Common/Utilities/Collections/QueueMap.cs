@@ -64,11 +64,11 @@ namespace Odyssey.Utilities.Collections
         }
 
 
-        public virtual void Enqueue<TDerivedItem>(TDerivedItem item)
+        public virtual void Enqueue<TDerivedItem>(TItem item)
             where TDerivedItem : TItem
         {
-            Contract.Requires<ArgumentNullException>(item!=null);
-            Type indexType = typeof(TDerivedItem);
+            Contract.Requires<ArgumentNullException>(item!=null, "item");
+            Type indexType = item.GetType();
 
             if (!IsAssociated(indexType))
                 Associate(indexType);
@@ -79,9 +79,7 @@ namespace Odyssey.Utilities.Collections
         public virtual TDerivedItem Dequeue<TDerivedItem>()
              where TDerivedItem : TItem
         {
-            Contract.Requires<ArgumentException>(IsAssociated<TDerivedItem>());
-            Type messageType = typeof(TDerivedItem);
-
+            Type messageType = typeof (TDerivedItem);
             TDerivedItem item = (TDerivedItem)queueMap[messageType].Dequeue();
 
             return item;

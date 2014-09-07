@@ -11,6 +11,7 @@ namespace Odyssey.Graphics.Organization
         BlendStateChange,
         DepthStencilStateChange,
         PostProcessing,
+        PlayAnimation,
     }
 
     public enum PreferredRasterizerState

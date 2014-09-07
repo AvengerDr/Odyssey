@@ -17,12 +17,12 @@ namespace Odyssey.Graphics
             get { return gradientStops; }
         }
 
-        protected Gradient(string name, GradientType type) : base(name, type)
+        protected Gradient(string name, ColorType type) : base(name, type)
         {
             gradientStops = new GradientStopCollection();
         }
 
-        protected Gradient(string name, IEnumerable<GradientStop> gradientStops, ExtendMode extendMode, GradientType type)
+        protected Gradient(string name, IEnumerable<GradientStop> gradientStops, ExtendMode extendMode, ColorType type)
             : this(name, type)
         {
             this.gradientStops.AddRange(gradientStops);

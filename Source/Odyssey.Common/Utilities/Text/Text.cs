@@ -3,6 +3,7 @@ using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
+using Odyssey.Animations;
 using SharpDX;
 
 namespace Odyssey.Utilities.Text
@@ -13,7 +14,7 @@ namespace Odyssey.Utilities.Text
 
         public static string GetCapitalLetters(string value)
         {
-            Contract.Requires<ArgumentException>(!string.IsNullOrEmpty(value));
+            Contract.Requires<ArgumentException>(!String.IsNullOrEmpty(value));
 
             StringBuilder sb = new StringBuilder();
 
@@ -47,7 +48,7 @@ namespace Odyssey.Utilities.Text
             if (stripHashSymbol)
                 color = color.Substring(1);
 
-            return string.IsNullOrEmpty(color)
+            return String.IsNullOrEmpty(color)
                 ? new Color4(0, 0, 0, 0)
                 : new Color4(ArgbToRgba(Int32.Parse(color, NumberStyles.HexNumber)));
         }
@@ -93,11 +94,55 @@ namespace Odyssey.Utilities.Text
 
         internal static string ParseResource(string s)
         {
-            Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(s), "String cannot be null");
+            Contract.Requires<ArgumentNullException>(!String.IsNullOrEmpty(s), "String cannot be null");
            
             var match = resourceRegex.Match(s);
             return match.Success ? match.Groups["name"].Value : null;
         }
 
+        public static string MakePlural<T>()
+        {
+            return String.Format("{0}s", typeof(T).Name);
+        }
+
+        public static bool IsExpressionArray(string expression, out string arrayName, out int index)
+        {
+            const string rArrayPattern = @"(?<array>\w*)\[(?<index>\d+)\]";
+            Regex rArray = new Regex(rArrayPattern);
+
+            Match match = rArray.Match(expression);
+            if (match.Success)
+            {
+                arrayName = match.Groups["array"].Value;
+                index = Int32.Parse(match.Groups["index"].Value);
+                return true;
+            }
+            else
+            {
+                arrayName = String.Empty;
+                index = -1;
+                return false;
+            }
+        }
+
+        public static bool IsExpressionArray(string expression, out string arrayName, out string index)
+        {
+            const string rArrayPattern = @"(?<array>\w*)\[(?<index>[a-zA-Z0-9\[\]]+)\]";
+            Regex rArray = new Regex(rArrayPattern);
+
+            Match match = rArray.Match(expression);
+            if (match.Success)
+            {
+                arrayName = match.Groups["array"].Value;
+                index = match.Groups["index"].Value;
+                return true;
+            }
+            else
+            {
+                arrayName = string.Empty;
+                index = string.Empty;
+                return false;
+            }
+        }
     }
 }

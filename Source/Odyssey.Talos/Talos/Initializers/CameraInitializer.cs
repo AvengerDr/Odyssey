@@ -12,7 +12,7 @@ using EngineReference = Odyssey.Graphics.Effects.EngineReference;
 
 namespace Odyssey.Talos.Initializers
 {
-    internal class CameraInitializer: Initializer<IEntity>
+    internal class CameraInitializer: Initializer<Entity>
     {
 
         public CameraInitializer(IServiceRegistry services)
@@ -23,7 +23,7 @@ namespace Odyssey.Talos.Initializers
         public override void SetupInitialization(ShaderInitializer initializer)
         {
             var services = initializer.Services;
-            var scene = services.GetService<IScene>();
+            var scene = services.GetService<IEntityProvider>();
             var technique = initializer.Technique;
             InitializerParameters parameters = new InitializerParameters(-1, technique, services, StaticSelector);
             var data = from metaData in technique.MetaData
@@ -44,7 +44,7 @@ namespace Odyssey.Talos.Initializers
             return cb.ContainsMetadata(Param.Properties.CameraId);
         }
 
-        protected override IEnumerable<IParameter> CreateParameter(ConstantBufferDescription cbParent, IEntity entity, int parameterIndex, string reference, InitializerParameters initializerParameters)
+        protected override IEnumerable<IParameter> CreateParameter(ConstantBufferDescription cbParent, Entity entity, int parameterIndex, string reference, InitializerParameters initializerParameters)
         {
             string cameraIdValue = cbParent.Get(Param.Properties.CameraId);
             int cameraId = Int32.Parse(cameraIdValue);

@@ -425,8 +425,7 @@ namespace Odyssey.Content
 
                 if (contentReader == null)
                 {
-                    throw new NotSupportedException(
-                        string.Format(
+                    throw new NotSupportedException(string.Format(
                             "Type [{0}] doesn't provide a ContentReaderAttribute, and there is no registered content reader for it.",
                             type.FullName));
                 }
@@ -435,8 +434,7 @@ namespace Odyssey.Content
 
                 if (result == null)
                 {
-                    throw new NotSupportedException(
-                        string.Format(
+                    throw new NotSupportedException(string.Format(
                             "Registered ContentReader of type [{0}] fails to load content of type [{1}] from file [{2}].",
                             contentReader.GetType(), type.FullName, assetName));
                 }

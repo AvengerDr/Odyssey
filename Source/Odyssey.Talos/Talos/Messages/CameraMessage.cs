@@ -11,7 +11,7 @@ namespace Odyssey.Talos.Messages
     {
         public ICamera Camera { get; private set; }
 
-        public CameraMessage(IEntity source, ICamera camera, ChangeType action, bool isSynchronous = false) : base(source, action, isSynchronous)
+        public CameraMessage(Entity source, ICamera camera, ChangeType action, bool isSynchronous = false) : base(source, action, isSynchronous)
         {
             Camera = camera;
         }

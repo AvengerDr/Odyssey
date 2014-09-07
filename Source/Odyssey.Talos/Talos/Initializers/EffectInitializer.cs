@@ -3,17 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Odyssey.Engine;
 using Odyssey.Geometry;
-using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.PostProcessing;
 using Odyssey.Graphics.Shaders;
 using Odyssey.Talos.Components;
-using Odyssey.Talos.Nodes;
 using SharpDX;
-using EngineReference = Odyssey.Graphics.Effects.EngineReference;
 
 namespace Odyssey.Talos.Initializers
 {
-    internal class EffectInitializer : Initializer<IEntity>
+    internal class EffectInitializer : Initializer<Entity>
     {
         private readonly IDirectXDeviceSettings deviceSettings;
 
@@ -27,7 +24,7 @@ namespace Odyssey.Talos.Initializers
             var services = initializer.Services;
             var technique = initializer.Technique;
 
-            var scene = services.GetService<IScene>();
+            var scene = services.GetService<IEntityProvider>();
 
             var data = from e in scene.Entities
                        let techniqueComponents = e.Components.OfType<ITechniqueComponent>()
@@ -48,7 +45,7 @@ namespace Odyssey.Talos.Initializers
             return true;
         }
 
-        protected override IEnumerable<IParameter> CreateParameter(ConstantBufferDescription cbParent,IEntity entity, int parameterIndex, string reference, InitializerParameters initializerParameters)
+        protected override IEnumerable<IParameter> CreateParameter(ConstantBufferDescription cbParent, Entity entity, int parameterIndex, string reference, InitializerParameters initializerParameters)
         {
             if (!ReferenceActions.ContainsKey(reference))
                 throw new InvalidOperationException(string.Format("[{0}]: Effect parameter not valid", reference));
@@ -102,7 +99,7 @@ namespace Odyssey.Talos.Initializers
             },
         };
 
-        private static IEnumerable<IParameter> ComputeBlurOffsetsAndWeights(int index, IEntity entity, InitializerParameters parameters)
+        private static IEnumerable<IParameter> ComputeBlurOffsetsAndWeights(int index, Entity entity, InitializerParameters parameters)
         {
             var deviceSettings = parameters.Services.GetService<IDirectXDeviceSettings>();
             bool isHorizontal = parameters.Technique.Name == "PostProcess.GaussianBlurH";

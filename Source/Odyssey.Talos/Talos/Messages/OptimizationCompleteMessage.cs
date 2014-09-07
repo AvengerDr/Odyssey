@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Odyssey.Graphics.Organization.Commands;
+using Odyssey.Organization.Commands;
 
 namespace Odyssey.Talos.Messages
 {

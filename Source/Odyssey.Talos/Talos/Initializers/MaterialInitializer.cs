@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
 using Odyssey.Engine;
 using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Shaders;
 using Odyssey.Talos.Components;
-using Odyssey.Talos.Nodes;
 using SharpDX;
-using EngineReference = Odyssey.Graphics.Effects.EngineReference;
 
 namespace Odyssey.Talos.Initializers
 {
@@ -26,7 +22,7 @@ namespace Odyssey.Talos.Initializers
             var services = initializer.Services;
             var technique = initializer.Technique;
             
-            var scene = services.GetService<IScene>();
+            var scene = services.GetService<IEntityProvider>();
             var data = from e in scene.Entities
                 where e.ContainsComponent<MaterialComponent>()
                 let techniqueComponents = e.Components.OfType<ITechniqueComponent>()

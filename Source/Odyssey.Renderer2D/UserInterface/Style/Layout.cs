@@ -27,7 +27,7 @@ namespace Odyssey.UserInterface.Style
             }
         }
 
-        internal static void UpdateLayoutVertical(Controls.Control parent, IEnumerable<UIElement> children)
+        public static void UpdateLayoutVertical(Control parent, IEnumerable<UIElement> children)
         {
             Vector2 previousPosition = parent.TopLeftPosition + new Vector2(parent.Padding.Left, parent.Padding.Top);
             foreach (UIElement element in children)

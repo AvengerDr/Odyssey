@@ -1,4 +1,5 @@
-﻿using Odyssey.Talos.Maps;
+﻿using Odyssey.Talos.Components;
+using Odyssey.Talos.Maps;
 using Odyssey.Talos.Systems;
 using System.Linq;
 
@@ -15,14 +16,14 @@ namespace Odyssey.Talos.Messages
             messageMap = new MessageMap();
         }
 
-        public void Register<TMessage>(ISystem system)
+        public void Register<TMessage>(SystemBase system)
             where TMessage : Message
         {
             messageMap.Add<TMessage>(system);
             system.MessageQueue.Associate<TMessage>();
         }
 
-        public void Unregister<TMessage>(ISystem system)
+        public void Unregister<TMessage>(SystemBase system)
             where TMessage : Message
         {
             messageMap.Remove<TMessage>(system);
@@ -33,18 +34,22 @@ namespace Odyssey.Talos.Messages
             where TMessage : Message
         {
             var interestedSystems = messageMap.Select<TMessage>();
-            foreach (ISystem system in interestedSystems)
+            foreach (SystemBase system in interestedSystems)
                 SendTo(message, system);
         }
 
-        public void SendTo<TMessage>(TMessage message, ISystem system)
-            where TMessage : Message
+        public void SendTo(Message message, SystemBase system)
         {
             if (!message.IsBlocking)
                 system.EnqueueMessage(message);
             else
                 system.ReceiveBlockingMessage(message);
-            
+        }
+
+        public void SendTo<TComponent>(Message message, Entity target)
+            where TComponent : Component
+        {
+            target.GetComponent<TComponent>().ReceiveMessage(message);
         }
 
         /// <summary>
@@ -58,7 +63,7 @@ namespace Odyssey.Talos.Messages
             where TMessage : Message
         {
             var interestedSystems = messageMap.Select<TMessage>().Where(s => s.Selector == selector);
-            foreach (ISystem system in interestedSystems)
+            foreach (SystemBase system in interestedSystems)
                 SendTo(message, system);
         }
 

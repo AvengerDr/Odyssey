@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Odyssey.Content
 {
-    public interface IResourceProvider
+    public interface IResourceProvider : IResource
     {
         bool ContainsResource(string resourceName);
         TResource GetResource<TResource>(string resourceName)

@@ -90,7 +90,7 @@ namespace Odyssey.Daedalus.Viewer
         {
             Content.LoadAssetList("Assets/Assets.yaml");
             DefineScene();
-            SetScene(scene);
+            SetUpdateCallback(scene);
             Window.IsMouseVisible = true;
         }
 
@@ -141,7 +141,7 @@ namespace Odyssey.Daedalus.Viewer
             pointLight.RegisterComponent(new PointLightComponent {});
             pointLight.RegisterComponent(new PositionComponent {Position = new Vector3(0, 0f, 3f)});
             pointLight.RegisterComponent(new UpdateComponent {UpdateFrequency = UpdateFrequency.RealTime});
-            pointLight.RegisterComponent(new ParentComponent() {Entity = root});
+            pointLight.RegisterComponent(new ParentComponent() {Parent = root});
             pointLight.RegisterComponent(new TransformComponent());
 
             previewModel = scene.CreateEntity("PreviewModel");

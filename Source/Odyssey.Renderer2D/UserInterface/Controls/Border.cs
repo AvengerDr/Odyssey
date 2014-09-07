@@ -1,4 +1,4 @@
-﻿using Odyssey.Graphics.Shapes;
+﻿using Odyssey.Graphics.Drawing;
 using SharpDX;
 
 namespace Odyssey.UserInterface.Controls

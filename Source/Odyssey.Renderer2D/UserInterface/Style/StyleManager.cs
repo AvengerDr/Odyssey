@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using Odyssey.Content;
 using Odyssey.Engine;
+using Odyssey.Graphics;
 using Odyssey.Utilities.Logging;
 using SharpDX;
 using System;
@@ -21,7 +22,8 @@ namespace Odyssey.UserInterface.Style
     public class StyleManager : Component, IStyleService
     {
         private readonly IAssetProvider content;
-        private readonly Dictionary<string, IResource> resources;
+        private readonly Dictionary<string, IResource> uniqueResources;
+        private readonly Dictionary<string, IResource> sharedResources;
         private FontCollection fontCollection;
         private NativeFontLoader fontLoader;
         private readonly IServiceRegistry services;
@@ -37,7 +39,8 @@ namespace Odyssey.UserInterface.Style
             content.AddMapping("Font", typeof(Font));
 
             content.AssetsLoaded += InitializeFontCollection;
-            resources = new Dictionary<string, IResource>();
+            sharedResources = new Dictionary<string, IResource>();
+            uniqueResources= new Dictionary<string, IResource>();
         }
 
         void InitializeFontCollection(object sender, AssetsLoadedEventArgs e)
@@ -57,17 +60,25 @@ namespace Odyssey.UserInterface.Style
         [Pure]
         public bool ContainsResource(string resourceName)
         {
-            return resources.ContainsKey(resourceName);
+            return sharedResources.ContainsKey(resourceName);
         }
 
-        public void AddResource(IResource resource)
+        public void AddResource(IResource resource, bool shared = true)
         {
             Contract.Requires<ArgumentException>(!ContainsResource(resource.Name), "A resource with the same name is already in the collection");
 
-            resources.Add(resource.Name, resource); 
+            if (shared)
+                sharedResources.Add(resource.Name, resource); 
+            else 
+                uniqueResources.Add(resource.Name, resource);
+
             var disposableResource = resource as IDisposable;
             if (disposableResource != null)
                 ToDispose(disposableResource);
+
+            var initializableResource = resource as IInitializable;
+            if (initializableResource!=null && !initializableResource.IsInited)
+                initializableResource.Initialize();
         }
 
         public Theme GetTheme(string themeName)
@@ -101,7 +112,7 @@ namespace Odyssey.UserInterface.Style
             if (!ContainsResource(resourceName)) 
                 throw new ArgumentException(string.Format("Resource '{0}' not found", resourceName));
 
-            var resource = resources[resourceName];
+            var resource = sharedResources[resourceName];
             TResource resultResource = resource as TResource;
             if (resultResource == null)
                 throw new ArgumentException(string.Format("Resource '{0}' of type '{1}' cannot be cast to '{2}'",
@@ -109,9 +120,50 @@ namespace Odyssey.UserInterface.Style
             return resultResource;
         }
 
+        public bool TryGetResource<TResource>(string resourceName, out TResource resource) where TResource : class, IResource
+        {
+            if (ContainsResource(resourceName))
+            {
+                resource = GetResource<TResource>(resourceName) as TResource;
+                return true;
+            }
+            resource = null;
+            return false;
+        }
+
+        public IEnumerable<TResource> GetResources<TResource>() where TResource : class, IResource
+        {
+            return sharedResources.Values.OfType<TResource>();
+        }
+
         public IEnumerable<IResource> Resources
         {
             get { throw new NotImplementedException(); }
+        }
+
+        Brush CreateColorResource(Direct2DDevice device, ColorResource colorResource, bool shared)
+        {
+            var resource = ToDispose(Brush.FromColorResource(device, colorResource));
+            AddResource(resource, shared);
+            return resource;
+        }
+
+        public Brush CreateOrRetrieveColorResource(Direct2DDevice device, ColorResource colorResource, bool shared = true)
+        {
+            if (!shared)
+                return CreateColorResource(device, colorResource, false);
+
+            Brush result;
+            if (TryGetResource(colorResource.Name, out result))
+                return result;
+
+            var solidColor = colorResource as SolidColor;
+            if (solidColor != null)
+            {
+                var brushes = GetResources<SolidColorBrush>();
+                result = brushes.FirstOrDefault(b => b.Color.Equals(solidColor.Color));
+            }
+            return result ?? CreateColorResource(device, colorResource, true);
         }
 
         void Unload()

@@ -1,4 +1,7 @@
-﻿using Odyssey.Graphics;
+﻿using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
+using Odyssey.Content;
+using Odyssey.Graphics;
 using Odyssey.UserInterface;
 using Odyssey.UserInterface.Controls;
 using System;
@@ -38,6 +41,27 @@ namespace Odyssey.Talos.Components
             // TODO add possibility of loading GUI from disk
             return true;
         }
+
+        #region IResourceProvider
+
+        protected override bool ContainsResource(string resourceName)
+        {
+            IResourceProvider resourceProvider = Overlay;
+            return resourceProvider.ContainsResource(resourceName);
+        }
+
+        protected override TResource GetResource<TResource>(string resourceName)
+        {
+            IResourceProvider resourceProvider = Overlay;
+            return resourceProvider.GetResource<TResource>(resourceName);
+        }
+
+        protected override IEnumerable<IResource> Resources
+        {
+            get { return ((IResourceProvider) Overlay).Resources; }
+        }
+
+        #endregion
 
     }
 }

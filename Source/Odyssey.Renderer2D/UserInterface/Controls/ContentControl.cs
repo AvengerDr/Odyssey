@@ -29,6 +29,7 @@ namespace Odyssey.UserInterface.Controls
             {
                 return base.DesignMode;
             }
+
             protected internal set
             {
                 base.DesignMode = value;

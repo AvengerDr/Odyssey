@@ -14,7 +14,7 @@ namespace Odyssey.Graphics
             : this(string.Format("{0}{1:D2}", typeof(SolidColor).Name, ++count), Color4.Black)
         { }
 
-        public SolidColor(string name, Color4 color, float opacity = 1.0f) : base(name,  GradientType.SolidColor)
+        public SolidColor(string name, Color4 color, float opacity = 1.0f) : base(name,  ColorType.SolidColor)
         {
             Color = color;
             Opacity = opacity;

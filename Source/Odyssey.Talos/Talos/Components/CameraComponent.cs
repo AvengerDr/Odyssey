@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using Odyssey.Animations;
 using Odyssey.Engine;
 using Odyssey.Graphics;
 using SharpDX;
@@ -27,7 +28,6 @@ namespace Odyssey.Talos.Components
 
         public Matrix View { get; internal set; }
         public Matrix Projection { get; internal set; }
-        public Quaternion Orientation { get; set; }
         public ViewportF Viewport { get; set; }
 
         public Vector3 Direction
@@ -57,7 +57,6 @@ namespace Odyssey.Talos.Components
             FarClip = 1000.0f;
             FieldOfView = (float) (Math.PI/4);
             Up = Vector3.UnitY;
-            Orientation = Quaternion.Identity;
             Type = CameraType.Perspective;
         }
 

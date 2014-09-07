@@ -52,10 +52,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Content\SceneReader.cs" />
+    <Compile Include="Talos\Components\AnimationComponent.cs" />
     <Compile Include="Talos\Components\BloomComponent.cs" />
     <Compile Include="Talos\Components\BlurComponent.cs" />
     <Compile Include="Talos\Components\ControllerComponent.cs" />
+    <Compile Include="Talos\Components\DesignerComponent.cs" />
     <Compile Include="Talos\Components\GlowComponent.cs" />
     <Compile Include="Talos\Components\ITechniqueComponent.cs" />
     <Compile Include="Talos\Components\NormalMappingComponent.cs" />
@@ -63,16 +64,15 @@
     <Compile Include="Talos\Components\IContentComponent.cs" />
     <Compile Include="Talos\Components\ITextureResource.cs" />
     <Compile Include="Talos\Components\OptionalComponentAttribute.cs" />
-    <Compile Include="Talos\Components\OrbitBehaviourComponent.cs" />
     <Compile Include="Talos\Components\PostProcessComponent.Bloom.cs" />
     <Compile Include="Talos\Components\PostProcessComponent.Glow.cs" />
     <Compile Include="Talos\Components\PostProcessComponent.cs" />
     <Compile Include="Talos\Components\RequiredComponentAttribute.cs" />
     <Compile Include="Talos\Components\SpriteComponent.cs" />
-    <Compile Include="Talos\Components\TagComponent.cs" />
     <Compile Include="Talos\Components\TargetComponent.cs" />
     <Compile Include="Talos\Components\UserInterfaceComponent.cs" />
     <Compile Include="Talos\IEntityController.cs" />
+    <Compile Include="Talos\IEntityProvider.cs" />
     <Compile Include="Talos\Initializers\ApplicationInitializer.cs" />
     <Compile Include="Talos\Initializers\IInitializer.cs" />
     <Compile Include="Talos\Initializers\InitializerParameters.cs" />
@@ -84,7 +84,9 @@
     <Compile Include="Talos\Interaction\OrbitController.cs" />
     <Compile Include="Talos\Interaction\PointerControllerBase.cs" />
     <Compile Include="Talos\Interaction\WasdCameraController.cs" />
+    <Compile Include="Talos\Maps\MessageMap.cs" />
     <Compile Include="Talos\Maps\SystemEventArgs.cs" />
+    <Compile Include="Talos\Maps\TagManager.cs" />
     <Compile Include="Talos\Messages\CameraMessage.cs" />
     <Compile Include="Talos\Messages\ContentMessage.cs" />
     <Compile Include="Talos\Messages\LightMessage.cs" />
@@ -92,6 +94,7 @@
     <Compile Include="Talos\Nodes\ICollectionService.cs" />
     <Compile Include="Talos\Serialization\SceneProxy.cs" />
     <Compile Include="Talos\Serialization\YamlSerializer.cs" />
+    <Compile Include="Talos\Systems\AnimationSystem.cs" />
     <Compile Include="Talos\Systems\ControllerSystem.cs" />
     <Compile Include="Talos\Systems\InitializationSystem.cs" />
     <Compile Include="Talos\Systems\IRenderableSystem.cs" />
@@ -120,9 +123,8 @@
     <Compile Include="Talos\Entity.cs" />
     <Compile Include="Talos\Maps\EntityEventArgs.cs" />
     <Compile Include="Talos\Maps\EntityMap.cs" />
-    <Compile Include="Talos\Maps\Maps.cs" />
     <Compile Include="Talos\Maps\SystemMap.cs" />
-    <Compile Include="Talos\Maps\EntityChangedEventArgs.cs" />
+    <Compile Include="Talos\Maps\EntityComponentChangedEventArgs.cs" />
     <Compile Include="Talos\Messages\EntityChangeMessage.cs" />
     <Compile Include="Talos\Messages\EntityMessage.cs" />
     <Compile Include="Talos\Messages\Enums.cs" />
@@ -136,10 +138,10 @@
     <Compile Include="Talos\Nodes\LightNode.cs" />
     <Compile Include="Talos\Nodes\PointLightNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Talos\Systems\RunOnceSystem.cs" />
     <Compile Include="Talos\Systems\Selector.cs" />
     <Compile Include="Talos\Systems\CameraSystem.cs" />
     <Compile Include="Talos\Systems\IUpdateableSystem.cs" />
-    <Compile Include="Talos\Systems\OrbitSystem.cs" />
     <Compile Include="Talos\Systems\OptimizationSystem.cs" />
     <Compile Include="Talos\Systems\ContentLoadingSystem.cs" />
     <Compile Include="Talos\Systems\ISystem.cs" />
@@ -152,6 +154,9 @@
     <Compile Include="Talos\Scene.cs" />
     <Compile Include="Talos\Systems\UpdateableSystemBase.cs" />
     <Compile Include="Talos\Systems\UserInterfaceSystem.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Content\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

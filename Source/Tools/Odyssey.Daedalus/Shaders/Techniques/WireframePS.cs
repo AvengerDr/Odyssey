@@ -96,46 +96,6 @@ namespace Odyssey.Daedalus.Shaders.Techniques
                 IsVerbose = true
             };
 
-            //BinaryFunctionNode minDistanceXY = new BinaryFunctionNode()
-            //{
-            //    Input1 = new SwizzleNode
-            //    {
-            //        Input = new ReferenceNode {Value = barycentric},
-            //        Swizzle = new[] {Swizzle.X}
-            //    },
-            //    Input2 = new SwizzleNode
-            //    {
-            //        Input = new ReferenceNode {Value = barycentric},
-            //        Swizzle = new[] {Swizzle.Y}
-            //    },
-            //    Function = HLSLIntrinsics.Min,
-            //};
-            //BinaryFunctionNode minDistanceXYZ = new BinaryFunctionNode()
-            //{
-            //    Input1 = minDistanceXY,
-            //    Input2 = new SwizzleNode
-            //    {
-            //        Input = new ReferenceNode { Value = barycentric },
-            //        Swizzle = new[] { Swizzle.Z }
-            //    },
-            //    Function = HLSLIntrinsics.Min,
-            //    Output = new Vector() { Type = Shaders.Type.Float, Name = "minDistance"},
-            //    IsVerbose = true
-            //};
-            //1
-            //SubtractionNode edgeIntensity = new SubtractionNode()
-            //{
-            //    Input1 = new ScalarNode() { Value = 1.0f},
-            //    Input2 = new BinaryFunctionNode
-            //    {
-            //        Input1 = new ScalarNode() {  Value = 0.005f},
-            //        Input2 = minDistanceXYZ,
-            //        Function = HLSLIntrinsics.Step
-            //    },
-            //    Output = new Vector() { Type = Shaders.Type.Float, Name = "edgeIntensity"},
-            //    IsVerbose =  true
-            //};
-
             MultiplyNode objectDiffuse = new MultiplyNode()
             {
                 Input1 = new ReferenceNode() {Value = diffuse},

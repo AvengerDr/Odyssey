@@ -6,26 +6,18 @@ namespace Odyssey.UserInterface.Data
 {
     public class DataTemplate
     {
-        private Dictionary<string, Binding> bindings;
+        private readonly BindingCollection bindings;
 
         public DataTemplate()
         {
-            bindings = new Dictionary<string, Binding>();
+            bindings = new BindingCollection();
         }
 
-        public IEnumerable<KeyValuePair<string, Binding>> Bindings
+        public BindingCollection Bindings
         {
             get
             {
                 return bindings;
-            }
-            set
-            {
-                if (!ReferenceEquals(bindings, value))
-                {
-                    var dictionary = value as Dictionary<string, Binding>;
-                    bindings = dictionary ?? value.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-                }
             }
         }
 

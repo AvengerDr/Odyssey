@@ -33,7 +33,7 @@ namespace Odyssey.Talos.Interaction
         private Quaternion qStart;
         private Vector3 sphereStart;
 
-        public ArcBallModelController()
+        public ArcBallModelController(IServiceRegistry services) : base(services)
         {
             arcBallRadius = 0.85f;
         }

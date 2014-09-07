@@ -15,6 +15,7 @@
 
 #region Using Directives
 
+using System.Linq;
 using Odyssey.UserInterface.Style;
 using System;
 using System.Collections;
@@ -165,6 +166,11 @@ namespace Odyssey.UserInterface.Controls
         {
             ProcessForDeletion(this[index]);
             base.RemoveItem(index);
+        }
+
+        public UIElement this[string name]
+        {
+            get { return Items.First(c => string.Equals(c.Name, name)); }
         }
     }
 }

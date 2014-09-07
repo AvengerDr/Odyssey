@@ -110,7 +110,7 @@ namespace Odyssey.Graphics.Models
         /// <param name="indices">The indices described in right handed form.</param>
         /// <param name="toLeftHanded">if set to <c>true</c> vertices and indices will be transformed to left handed. Default is true.</param>
         /// <exception cref="System.InvalidOperationException">Cannot generate more than 65535 indices on feature level HW &lt;= 9.3</exception>
-        public GeometricPrimitive(string name, VertexPositionNormalTexture[] vertices, int[] indices, PrimitiveType primitiveType, bool toLeftHanded = false)
+        private GeometricPrimitive(string name, VertexPositionNormalTexture[] vertices, int[] indices, PrimitiveType primitiveType, bool toLeftHanded = false)
             : base(name, vertices, indices, primitiveType, toLeftHanded)
         {
         }

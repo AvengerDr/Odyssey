@@ -1,112 +1,74 @@
-﻿using Odyssey.Utilities.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Reflection;
 
 namespace Odyssey.Utilities.Collections
 {
-    public class CollectionMap<TIndex, TCollection, TItem>
+    public class CollectionMap<TIndex, TCollection, TItem> : IEnumerable<TCollection> 
         where TCollection : ICollection<TItem>, new()
     {
-        readonly Dictionary<Type, TCollection> collectionMap;
+        readonly Dictionary<TIndex, TCollection> collectionMap;
 
         public CollectionMap()
         {
-            collectionMap = new Dictionary<Type, TCollection>();
+            collectionMap = new Dictionary<TIndex,TCollection>();
         }
 
-        void Associate(Type index)
+        public bool ContainsKey(TIndex index)
         {
-            if (!collectionMap.ContainsKey(index))
-            {
-                collectionMap[index] = new TCollection();
-            }
-            else LogEvent.Engine.Warning("Map is already associated to " + index.Name);
+            Contract.Requires<ArgumentNullException>(index != null, "index");
+            return collectionMap.ContainsKey(index);
         }
 
-        public void Associate<TDerivedIndex>()
-            where TDerivedIndex : TIndex
+        public bool ContainsItem(TIndex index, TItem item)
         {
-            Associate(typeof(TDerivedIndex));
+            return ContainsKey(index) && this[index].Contains(item);
         }
 
-        public void RemoveAssociation<TDerivedIndex>()
-            where TDerivedIndex : TIndex
+        public void AddTo(TIndex index, TItem item)
         {
-            RemoveAssociation(typeof(TDerivedIndex));
+            Contract.Requires<ArgumentException>(ContainsKey(index), "Key does not exist in the collection");
+            collectionMap[index].Add(item);
         }
 
-        void RemoveAssociation(Type messageType)
+        public void RemoveFrom(TIndex index, TItem item)
         {
-            collectionMap.Remove(messageType);
+            Contract.Requires<ArgumentException>(ContainsKey(index), "index");
+            collectionMap[index].Remove(item);
         }
 
-        bool IsAssociated(Type messageType)
+        public void DefineNew(TIndex index)
         {
-            return collectionMap.ContainsKey(messageType);
+            Contract.Requires<ArgumentNullException>(index != null, "index");
+            collectionMap.Add(index, new TCollection());
         }
 
-        public bool IsAssociated<TDerivedIndex>()
-            where TDerivedIndex : TIndex
+        public void Remove(TIndex index)
         {
-            return IsAssociated(typeof(TDerivedIndex));
+            collectionMap.Remove(index);
         }
 
-        bool IsMapEmpty(Type messageType)
+        public IEnumerable<TItem> Select(TIndex index)
         {
-            return collectionMap[messageType].Count == 0;
+            return !ContainsKey(index) ? Enumerable.Empty<TItem>() : collectionMap[index];
         }
 
-        [Pure]
-        public bool IsRegistered<TDerivedIndex>(TItem item)
-            where TDerivedIndex : TIndex
+        public TCollection this[TIndex index]
         {
-            Type indexType = typeof(TDerivedIndex);
-
-            if (!IsAssociated(indexType))
-                return false;
-            return collectionMap[indexType].Contains(item);
+            get { return collectionMap[index]; }
+            set { collectionMap[index] = value; }
         }
 
-
-        public void Add<TDerivedIndex>(TItem item)
-            where TDerivedIndex : TIndex
+        public IEnumerator<TCollection> GetEnumerator()
         {
-            Contract.Requires<ArgumentException>(!IsRegistered<TDerivedIndex>(item));
-            Type indexType = typeof(TDerivedIndex);
-
-            if (!IsAssociated(indexType))
-                Associate(indexType);
-
-            collectionMap[indexType].Add(item);
+            return collectionMap.Values.GetEnumerator();
         }
 
-        public void Remove<TDerivedIndex>(TItem item)
-             where TDerivedIndex : TIndex
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            Contract.Requires<ArgumentException>(IsRegistered<TDerivedIndex>(item));
-            Type messageType = typeof(TDerivedIndex);
-
-            collectionMap[messageType].Remove(item);
-
-            if (IsMapEmpty(messageType))
-                RemoveAssociation(messageType);
+            return GetEnumerator();
         }
-
-        public IEnumerable<TItem> Select<TDerivedIndex>()
-        {
-            Type messageType = typeof(TDerivedIndex);
-            if (!collectionMap.ContainsKey(messageType))
-                return Enumerable.Empty<TItem>();
-
-            var subscribedSystems = collectionMap[messageType];
-
-            if (subscribedSystems.Any())
-                return subscribedSystems;
-            else
-                return Enumerable.Empty<TItem>();
-        }
-
     }
 }

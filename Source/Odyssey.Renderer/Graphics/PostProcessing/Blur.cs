@@ -65,7 +65,8 @@ namespace Odyssey.Graphics.PostProcessing
         /// </summary>
         static float ComputeGaussian(float n)
         {
-            return (float)((1.0 / Math.Sqrt(2 * Math.PI * BlurAmount)) * Math.Exp(-(n * n) / (2 * BlurAmount * BlurAmount)));
+            const float sigmaSquared = BlurAmount*BlurAmount;
+            return (float)((1.0 / Math.Sqrt(2 * Math.PI * sigmaSquared)) * Math.Exp(-(n * n) / (2 * sigmaSquared)));
         }
     }
 }

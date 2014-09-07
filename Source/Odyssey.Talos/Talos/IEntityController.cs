@@ -4,7 +4,7 @@ namespace Odyssey.Talos
 {
     public interface IEntityController
     {
-        void BindToEntity(IEntity source);
+        void BindToEntity(Entity source);
         void Update(ITimeService time);
     }
 }

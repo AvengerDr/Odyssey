@@ -24,10 +24,10 @@ namespace Odyssey.Graphics
         public float RadiusY { get; set; }
 
         public RadialGradient()
-            : base(string.Format("{0}{1:D2}", typeof(RadialGradient).Name, ++count), GradientType.Radial)
+            : base(string.Format("{0}{1:D2}", typeof(RadialGradient).Name, ++count), ColorType.RadialGradient)
         { }
 
-        public RadialGradient(string name, Vector2 center, Vector2 originOffset, float radiusX, float radiusY, IEnumerable<GradientStop> gradientStops, ExtendMode extendMode= ExtendMode.Clamp) : base(name, gradientStops, extendMode, GradientType.Radial)
+        public RadialGradient(string name, Vector2 center, Vector2 originOffset, float radiusX, float radiusY, IEnumerable<GradientStop> gradientStops, ExtendMode extendMode= ExtendMode.Clamp) : base(name, gradientStops, extendMode, ColorType.RadialGradient)
         {
             Center = center;
             OriginOffset = originOffset;

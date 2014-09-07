@@ -28,7 +28,7 @@ namespace Odyssey.Utilities.Reflection
         public static PropertyInfo GetProperty(Type type, string propertyName)
         {
             Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(propertyName));
-            return GetProperties(type).FirstOrDefault(p => p.Name == propertyName);
+            return type.GetRuntimeProperty(propertyName);
         }
 
         public static IEnumerable<PropertyInfo> GetProperties(Type type)
@@ -37,11 +37,41 @@ namespace Odyssey.Utilities.Reflection
             return type.GetRuntimeProperties();
         }
 
+        public static IEnumerable<FieldInfo> GetFields(Type type)
+        {
+            Contract.Requires<ArgumentNullException>(type != null, "type");
+            return type.GetRuntimeFields();
+        }
+
+        public static IEnumerable<EventInfo> GetEvents(Type type)
+        {
+            Contract.Requires<ArgumentNullException>(type != null, "type");
+            return type.GetRuntimeEvents();
+        }
+
+        public static MethodInfo GetMethod(Type type, string methodName, Type[] parameters)
+        {
+            Contract.Requires<ArgumentNullException>(type != null, "type");
+            Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(methodName));
+            return type.GetRuntimeMethod(methodName, parameters);
+        }
+
+        public static IEnumerable<MethodInfo> GetMethods(Type type)
+        {
+            Contract.Requires<ArgumentNullException>(type != null, "type");
+            return type.GetRuntimeMethods();
+        }
+
+        public static MethodInfo GetMethod(Type type, string methodName)
+        {
+            return GetMethods(type).First(m => string.Equals(m.Name, methodName));
+        }
+
         public static FieldInfo GetField(Type type, string fieldName)
         {
             Contract.Requires<ArgumentNullException>(type != null, "type");
             Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(fieldName));
-            return type.GetRuntimeFields().FirstOrDefault(f => f.Name == fieldName);
+            return type.GetRuntimeField(fieldName);
         }
 
         public static FieldInfo FindFieldPath(Type type, string path, out PropertyInfo containingProperty)
@@ -140,7 +170,11 @@ namespace Odyssey.Utilities.Reflection
         public static string GetPropertyName<TClass>(Expression<Func<TClass, object>> propertyExpression)
         {
             var body = propertyExpression.ToString();
-            body = body.Substring(body.IndexOf(".") + 1);
+            int start = body.IndexOf('.')+1;
+            int end = body.Length - start;
+            if (body.EndsWith(")"))
+                end -= 1;
+            body = body.Substring(start, end);
             return body;
         }
 

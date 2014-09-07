@@ -7,7 +7,7 @@ namespace Odyssey.Talos.Nodes
 {
     public class PointLightNode : LightNode
     {
-        public PointLightNode(IEntity entity) : base(entity)
+        public PointLightNode(Entity entity) : base(entity)
         {
             LightComponent = entity.GetComponent<PointLightComponent>();
         }

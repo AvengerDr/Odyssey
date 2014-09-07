@@ -36,7 +36,8 @@ namespace Odyssey.Talos.Interaction
         private Vector2 pCurrent;
         private Vector2 pPrev;
 
-        public OrbitController()
+        public OrbitController(IServiceRegistry services)
+            : base(services)
         {
             CameraOffset = 10.0f;
             RotationSpeed = 0.25f;
@@ -46,7 +47,7 @@ namespace Odyssey.Talos.Interaction
 
         public float RotationSpeed { get; set; }
 
-        public override void BindToEntity(IEntity source)
+        public override void BindToEntity(Entity source)
         {
             base.BindToEntity(source);
             cTarget = source.GetComponent<TargetComponent>();

@@ -10,7 +10,7 @@ namespace Odyssey.Animations
             Function = Linear;
         }
 
-        public static object Linear(FloatKeyFrame start, FloatKeyFrame end, float time)
+        public static object Linear(FloatKeyFrame start, FloatKeyFrame end, float time, object options = null)
         {
             float newValue = Map(start.Time, end.Time, time);
 
