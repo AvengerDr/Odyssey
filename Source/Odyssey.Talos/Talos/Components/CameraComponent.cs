@@ -1,11 +1,6 @@
-﻿using System.ComponentModel;
-using Odyssey.Animations;
-using Odyssey.Engine;
-using Odyssey.Graphics;
+﻿using Odyssey.Engine;
 using SharpDX;
 using System;
-using SharpYaml;
-using SharpYaml.Serialization;
 
 namespace Odyssey.Talos.Components
 {

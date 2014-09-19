@@ -11,7 +11,7 @@ namespace Odyssey.Graphics
 {
     public sealed class SolidColorBrush : Brush
     {
-        protected new readonly SolidColor ColorResource;
+        private new readonly SolidColor ColorResource;
         private new readonly SharpDX.Direct2D1.SolidColorBrush Resource;
 
         private SolidColorBrush(string name, Direct2DDevice device, SolidColor solidColor, SharpDX.Direct2D1.SolidColorBrush brush)

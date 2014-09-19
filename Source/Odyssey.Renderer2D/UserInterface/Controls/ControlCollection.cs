@@ -108,6 +108,16 @@ namespace Odyssey.UserInterface.Controls
             }
         }
 
+        public void Sort<TKey>(Func<UIElement,TKey> keySelector)
+        {
+            var controlArray = Items.OrderBy(keySelector).ToArray();
+            Clear();
+            for (int i = 0; i < controlArray.Length; i++)
+            {
+                base.InsertItem(i, controlArray[i]);
+            }
+        }
+
         public UIElement[] ToArray()
         {
             UIElement[] controlArray = new UIElement[Count];

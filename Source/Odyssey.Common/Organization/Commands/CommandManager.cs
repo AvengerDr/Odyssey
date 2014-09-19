@@ -93,7 +93,7 @@ namespace Odyssey.Graphics.Organization.Commands
             foreach (Command command in commands.Where(c => !c.IsInited))
                 command.Initialize();
 
-            IsInited = true;
+            IsInited = commands.All(c=> c.IsInited);
         }
 
         public void Run()

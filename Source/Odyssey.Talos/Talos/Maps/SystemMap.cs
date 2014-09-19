@@ -129,7 +129,7 @@ namespace Odyssey.Talos.Maps
             if (!entitiesBySystem[system.Id].Contains(entity))
             {
                 entitiesBySystem[system.Id].Add(entity);
-                scene.Messenger.SendTo(new EntityChangeMessage(entity, ChangeType.Added), system);
+                scene.Messenger.SendToSystem(new EntityChangeMessage(entity, UpdateType.Add), system);
             }
         }
 
@@ -144,7 +144,7 @@ namespace Odyssey.Talos.Maps
         {
             entitiesBySystem[system.Id].Remove(entity);
 
-            scene.Messenger.SendTo(new EntityChangeMessage(entity, ChangeType.Removed), system);
+            scene.Messenger.SendToSystem(new EntityChangeMessage(entity, UpdateType.Remove), system);
         }
 
         internal bool IsEntityRegisteredToSystem(IEntity entity, SystemBase system)

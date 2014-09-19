@@ -30,7 +30,7 @@ namespace Odyssey.Animations
             int keyFrameIndex = 0;
             foreach (var keyframe in originalCurve)
             {
-                var newGradient = originalBrush.Gradient.CopyAs(string.Format("{0}.Keyframe{1:D2}", newCurve.Name, keyFrameIndex++));
+                var newGradient = (Gradient)originalBrush.Gradient.CopyAs(string.Format("{0}.Keyframe{1:D2}", newCurve.Name, keyFrameIndex++));
                 newGradient.GradientStops[index].Color = keyframe.Value;
                 var newBrush = Brush.FromColorResource(device, newGradient);
                 newBrush.Initialize();

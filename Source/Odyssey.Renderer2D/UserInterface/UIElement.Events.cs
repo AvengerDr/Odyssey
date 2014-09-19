@@ -240,7 +240,7 @@ namespace Odyssey.UserInterface
         #region Events declaration
 
         /// <summary>
-        /// Occurs when the control receives focus..
+        /// Occurs when the control receives focus.
         /// </summary>
         public event EventHandler<EventArgs> GotFocus;
 
@@ -282,11 +282,13 @@ namespace Odyssey.UserInterface
         /// <summary>
         /// Occurs when the <see cref="DesignMode"/> property value changes.
         /// </summary>
-        public event EventHandler<ControlEventArgs> DesignModeChanged;
+        public event EventHandler<EventArgs> DesignModeChanged;
 
-        public event EventHandler<ControlEventArgs> Initialized;
+        public event EventHandler<EventArgs> Initialized;
 
-        public event EventHandler<ControlEventArgs> Initializing;
+        public event EventHandler<EventArgs> Initializing;
+
+        public event EventHandler<EventArgs> DataContextChanged;
 
         public event EventHandler<TimeEventArgs> Tick;
 
@@ -324,8 +326,8 @@ namespace Odyssey.UserInterface
         /// Raises the <see cref="DesignModeChanged"/> event.
         /// </summary>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event
-        /// data.</param>
-        protected virtual void OnDesignModeChanged(ControlEventArgs e)
+        ///     data.</param>
+        protected virtual void OnDesignModeChanged(EventArgs e)
         {
             RaiseEvent(DesignModeChanged, this,e );
         }
@@ -363,12 +365,12 @@ namespace Odyssey.UserInterface
             RaiseEvent(HighlightedChanged, this, e);
         }
 
-        protected virtual void OnInitialized(ControlEventArgs e)
+        protected virtual void OnInitialized(EventArgs e)
         {
             RaiseEvent(Initialized, this, e);
         }
 
-        protected virtual void OnInitializing(ControlEventArgs e)
+        protected virtual void OnInitializing(EventArgs e)
         {
             RaiseEvent(Initializing, this, e);
         }
@@ -459,6 +461,11 @@ namespace Odyssey.UserInterface
         }
 
         #endregion Control Events
+
+        protected virtual void OnDataContextChanged(EventArgs e)
+        {
+            RaiseEvent(DataContextChanged, this, EventArgs.Empty);
+        }
 
         protected virtual void OnReadXml(XmlDeserializationEventArgs e)
         {

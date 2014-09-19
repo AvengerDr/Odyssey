@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Linq.Expressions;
 using Odyssey.Animations;
 using Odyssey.Geometry;
@@ -24,10 +25,11 @@ namespace Odyssey.Graphics
         public float RadiusY { get; set; }
 
         public RadialGradient()
-            : base(string.Format("{0}{1:D2}", typeof(RadialGradient).Name, ++count), ColorType.RadialGradient)
+            : this(string.Format("{0}{1:D2}", typeof(RadialGradient).Name, ++count),Vector2.Zero, Vector2.Zero, 1f, 1f, Enumerable.Empty<GradientStop>())
         { }
-
-        public RadialGradient(string name, Vector2 center, Vector2 originOffset, float radiusX, float radiusY, IEnumerable<GradientStop> gradientStops, ExtendMode extendMode= ExtendMode.Clamp) : base(name, gradientStops, extendMode, ColorType.RadialGradient)
+        
+        public RadialGradient(string name, Vector2 center, Vector2 originOffset, float radiusX, float radiusY, IEnumerable<GradientStop> gradientStops, ExtendMode extendMode = ExtendMode.Clamp, float opacity = 1.0f, bool shared=true)  
+             : base(name, gradientStops, extendMode, ColorType.RadialGradient, opacity, shared)
         {
             Center = center;
             OriginOffset = originOffset;
@@ -87,9 +89,9 @@ namespace Odyssey.Graphics
         }
         #endregion
 
-        internal override Gradient CopyAs(string newResourceName)
+        internal override ColorResource CopyAs(string newResourceName, bool shared = true)
         {
-            return new RadialGradient(newResourceName, Center, OriginOffset, RadiusX, RadiusY, GradientStops, GradientStops.ExtendMode);
+            return new RadialGradient(newResourceName, Center, OriginOffset, RadiusX, RadiusY, GradientStops, GradientStops.ExtendMode, Opacity, shared);
         }
     }
 }

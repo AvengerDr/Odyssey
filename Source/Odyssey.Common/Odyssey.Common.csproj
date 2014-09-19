@@ -52,6 +52,9 @@
     <Compile Include="Animations\Cutscene.cs" />
     <Compile Include="Animations\IAnimatable.cs" />
     <Compile Include="Animations\IAnimator.cs" />
+    <Compile Include="Animations\PathCurve.cs" />
+    <Compile Include="Animations\Vector3KeyFrame.cs" />
+    <Compile Include="Geometry\IFunction.cs" />
     <Compile Include="Organization\Commands\PlayAnimationCommand.cs" />
     <Compile Include="Animations\QuaternionCurve.cs" />
     <Compile Include="Animations\FloatCurve.cs" />
@@ -120,6 +123,7 @@
     <Compile Include="Serialization\ISerializableResource.cs" />
     <Compile Include="Serialization\XmlDeserializationEventArgs.cs" />
     <Compile Include="Serialization\XmlSerializationEventArgs.cs" />
+    <Compile Include="Talos\IPosition.cs" />
     <Compile Include="Utilities\Collections\DictionaryMap.cs" />
     <Compile Include="Utilities\Collections\ReadOnlyArray.cs" />
     <Compile Include="Graphics\Organization\IRenderCommand.cs" />
@@ -133,7 +137,6 @@
     <Compile Include="Engine\IDevice.cs" />
     <Compile Include="Engine\IDirectXDeviceManager.cs" />
     <Compile Include="Engine\IDirectXDeviceSettings.cs" />
-    <Compile Include="Engine\IFpsTimer.cs" />
     <Compile Include="Engine\Param.cs" />
     <Compile Include="Engine\ServiceRegistry.cs" />
     <Compile Include="Engine\StereoParameters.cs" />

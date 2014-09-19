@@ -17,15 +17,10 @@ namespace Odyssey.Graphics
             get { return gradientStops; }
         }
 
-        protected Gradient(string name, ColorType type) : base(name, type)
+        protected Gradient(string name, IEnumerable<GradientStop> gradientStops, ExtendMode extendMode, ColorType type, float opacity, bool shared) 
+            : base(name, type, opacity, shared)
         {
-            gradientStops = new GradientStopCollection();
-        }
-
-        protected Gradient(string name, IEnumerable<GradientStop> gradientStops, ExtendMode extendMode, ColorType type)
-            : this(name, type)
-        {
-            this.gradientStops.AddRange(gradientStops);
+            this.gradientStops = new GradientStopCollection(gradientStops);
             this.gradientStops.ExtendMode = extendMode;
         }
         
@@ -57,6 +52,5 @@ namespace Odyssey.Graphics
             reader.ReadEndElement();
         }
 
-        internal abstract Gradient CopyAs(string newResourceName);
     }
 }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Odyssey.Interaction;
+﻿using Odyssey.Interaction;
 using SharpDX;
 
 namespace Odyssey.UserInterface.Behaviors
@@ -17,7 +12,6 @@ namespace Odyssey.UserInterface.Behaviors
             AssociatedElement.PointerPressed += OnPointerPressed;
             AssociatedElement.PointerReleased += OnPointerReleased;
             AssociatedElement.PointerMoved += OnPointerMoved;
-
         }
 
         void OnPointerPressed(object sender, PointerEventArgs e)

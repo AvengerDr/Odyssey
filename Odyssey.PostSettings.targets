@@ -1,4 +1,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Target Name="BeforeClean">
+  <RemoveDir Condition="Exists('$(ProjectDir)Generated')" Directories="$(ProjectDir)Generated"/>
+</Target>
 <Target Name="AfterBuild">
     <Exec Command='"$(SolutionDir)\Tools\SharpCLI\SharpCLI.exe" "$(TargetPath)"'/>
 

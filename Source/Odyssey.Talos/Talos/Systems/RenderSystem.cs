@@ -21,12 +21,12 @@ namespace Odyssey.Talos.Systems
 
         public override void Start()
         {
-            Messenger.Register<OptimizationCompleteMessage>(this);
+            Messenger.Register<CommandUpdateMessage>(this);
         }
 
         public override void Stop()
         {
-            Messenger.Unregister<OptimizationCompleteMessage>(this);
+            Messenger.Unregister<CommandUpdateMessage>(this);
         }
 
         public bool BeginRender()
@@ -49,17 +49,17 @@ namespace Odyssey.Talos.Systems
 
         public override void Process(ITimeService time)
         {
-            if (!MessageQueue.HasItems<OptimizationCompleteMessage>()) return;
+            if (!MessageQueue.HasItems<CommandUpdateMessage>()) return;
 
-            var mOptimization = MessageQueue.Dequeue<OptimizationCompleteMessage>();
-            if (!commandManager.IsEmpty)
-                commandManager.Clear();
+            var mUpdate = MessageQueue.Dequeue<CommandUpdateMessage>();
 
-            commandManager.AddLast(mOptimization.Commands);
-            commandManager.Initialize();
-
-            if (MessageQueue.HasItems<OptimizationCompleteMessage>())
-                throw new InvalidOperationException(string.Format("Multiple {0}s found", typeof(OptimizationCompleteMessage).Name));
+            switch (mUpdate.UpdateType)
+            {
+                case UpdateType.Add:
+                    commandManager.AddLast(mUpdate.Commands);
+                    commandManager.Initialize();
+                    break;
+            }
         }
     }
 }

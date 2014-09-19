@@ -25,11 +25,15 @@
     <Compile Include="GeometryHelper.cs" />
     <Compile Include="IPolygon.cs" />
     <Compile Include="Primitives\BSpline.cs" />
+    <Compile Include="Primitives\BSpline3D.cs" />
+    <Compile Include="Primitives\BSplineBase.cs" />
     <Compile Include="Primitives\CurveBase.cs" />
     <Compile Include="Primitives\Ellipse.cs" />
     <Compile Include="Primitives\Face.cs" />
     <Compile Include="Primitives\FigureType.cs" />
     <Compile Include="Primitives\IFigure.cs" />
+    <Compile Include="Primitives\Line.cs" />
+    <Compile Include="Primitives\LinearPath.cs" />
     <Compile Include="Primitives\Polygon.cs" />
     <Compile Include="Primitives\Rectangle.cs" />
     <Compile Include="Primitives\Segment.cs" />

@@ -22,7 +22,7 @@ namespace Odyssey.Talos.Systems
         {
             var node = (from kvp in lightNodes where kvp.Value.EntityId == entity.Id select kvp.Value).First();
             lightNodes.Remove(node.Id);
-            Messenger.Send(new LightMessage(entity, node, ChangeType.Removed));
+            Messenger.Send(new LightMessage(entity, node, UpdateType.Remove));
         }
 
         public override void Start()

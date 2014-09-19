@@ -16,10 +16,8 @@ namespace Odyssey.UserInterface.Controls
     {
         private IEnumerable itemsSource;
 
-        protected ItemsControl(string styleClass)
-            : base(styleClass)
-        {
-        }
+        protected ItemsControl(string controlStyleClass, string textStyleClass = UserInterface.Style.TextStyle.Default)
+            : base(controlStyleClass, textStyleClass) {}
 
         public DataTemplate DataTemplate { get; set; }
 
@@ -28,7 +26,7 @@ namespace Odyssey.UserInterface.Controls
             get { return itemsSource; }
             set
             {
-                if (itemsSource != value)
+                if (!Equals(itemsSource, value))
                 {
                     itemsSource = value;
                     DataContext = value;
@@ -49,13 +47,13 @@ namespace Odyssey.UserInterface.Controls
                     TextStyleClass = TextStyleClass
                 }
             };
-            DataTemplate.Bindings.Add(ReflectionHelper.GetPropertyName((Label l) => l.Text), new Binding(DataTemplate.VisualTree.Name, string.Empty));
+            DataTemplate.Bindings.Add(ReflectionHelper.GetPropertyName((Label l) => l.Text),
+                new Binding(DataTemplate.VisualTree.Name, string.Empty));
             return DataTemplate;
         }
 
-        protected override void OnInitializing(ControlEventArgs e)
+        protected override void OnDataContextChanged(EventArgs e)
         {
-            base.OnInitializing(e);
             if (DataTemplate == null)
                 DataTemplate = CreateDefaultTemplate();
             if (DataTemplate.DataType == null)
@@ -73,10 +71,10 @@ namespace Odyssey.UserInterface.Controls
                 foreach (UIElement element in TreeTraversal.PreOrderVisit(DataTemplate.VisualTree))
                 {
                     UIElement newItem = element.Copy();
-                    
+
                     var contentControlParent = element.Parent as ContentControl;
                     if (contentControlParent != null)
-                        ((ContentControl)previousElement).Content = newItem;
+                        ((ContentControl) previousElement).Content = newItem;
                     else
                         Add(ToDispose(newItem));
 
@@ -86,11 +84,9 @@ namespace Odyssey.UserInterface.Controls
                     {
                         newItem.SetBinding(kvp.Value, kvp.Key);
                     }
-                    
+
                     previousElement = newItem;
                 }
-
-                //TODO Implement Binding
             }
         }
 

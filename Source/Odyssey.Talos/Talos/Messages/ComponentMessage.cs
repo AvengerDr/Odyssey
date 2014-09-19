@@ -5,10 +5,10 @@ namespace Odyssey.Talos.Messages
     public class ComponentMessage<TComponent> : Message
         where TComponent : IComponent
     {
-        public ChangeType Action { get; private set; }
+        public UpdateType Action { get; private set; }
         public TComponent Content { get; private set; }
 
-        public ComponentMessage(TComponent content, ChangeType action, bool isSynchronous = false)
+        public ComponentMessage(TComponent content, UpdateType action, bool isSynchronous = false)
             : base(isSynchronous)
         {
             Action = action;

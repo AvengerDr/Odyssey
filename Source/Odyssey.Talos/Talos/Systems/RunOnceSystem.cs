@@ -27,7 +27,7 @@ namespace Odyssey.Talos.Systems
             while (MessageQueue.HasItems<EntityChangeMessage>())
             {
                 var mEntity = MessageQueue.Dequeue<EntityChangeMessage>();
-                if (mEntity.Action == ChangeType.Added)
+                if (mEntity.Action == UpdateType.Add)
                 {
                     RegisterEntity(mEntity.Source);
                 }

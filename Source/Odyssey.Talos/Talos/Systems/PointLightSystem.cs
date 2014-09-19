@@ -17,7 +17,7 @@ namespace Odyssey.Talos.Systems
         {
             PointLightNode nPointLight = new PointLightNode(entity);
             LightNodes.Add(nPointLight.Id, nPointLight);
-            Messenger.Send(new LightMessage(entity, nPointLight, ChangeType.Removed));
+            Messenger.Send(new LightMessage(entity, nPointLight, UpdateType.Remove));
         }
 
         public override void BeforeUpdate()
@@ -27,9 +27,9 @@ namespace Odyssey.Talos.Systems
             while (MessageQueue.HasItems<EntityChangeMessage>())
             {
                 EntityChangeMessage mEntity = MessageQueue.Dequeue<EntityChangeMessage>();
-                if (mEntity.Action == ChangeType.Added)
+                if (mEntity.Action == UpdateType.Add)
                     SetupEntity(mEntity.Source);
-                else if (mEntity.Action == ChangeType.Removed)
+                else if (mEntity.Action == UpdateType.Remove)
                     RemoveEntity(mEntity.Source);
             }
         }

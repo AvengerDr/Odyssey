@@ -2,17 +2,6 @@
 
 namespace Odyssey.Talos.Components
 {
-    public enum ComponentTypeEnum
-    {
-        None,
-        Transform,
-        Update,
-        Material,
-        //All = ~0,
-        Model,
-        Shader,
-    }
-
     public sealed class ComponentType
     {
         static long nextBit = 1;

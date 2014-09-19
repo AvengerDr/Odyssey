@@ -1,5 +1,6 @@
 ﻿#region Using Directives
 
+using System;
 using Odyssey.Interaction;
 using System.Linq;
 
@@ -16,7 +17,7 @@ namespace Odyssey.UserInterface.Controls
         {
         }
 
-        protected ButtonBase(string controlStyleClass, string textStyleClass = ControlTag)
+        protected ButtonBase(string controlStyleClass, string textStyleClass = UserInterface.Style.TextStyle.Default)
             : base(controlStyleClass, textStyleClass)
         {
         }
@@ -27,7 +28,7 @@ namespace Odyssey.UserInterface.Controls
             ActiveStatus = ControlStatus.Enabled;
         }
 
-        protected override void OnInitializing(ControlEventArgs e)
+        protected override void OnInitializing(EventArgs e)
         {
             base.OnInitializing(e);
             if (Content == null)

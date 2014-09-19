@@ -14,10 +14,15 @@ namespace Odyssey.Graphics
             : this(string.Format("{0}{1:D2}", typeof(SolidColor).Name, ++count), Color4.Black)
         { }
 
-        public SolidColor(string name, Color4 color, float opacity = 1.0f) : base(name,  ColorType.SolidColor)
+        public SolidColor(string name, Color4 color, float opacity = 1.0f, bool shared=true) : base(name,  ColorType.SolidColor, opacity, shared)
         {
             Color = color;
             Opacity = opacity;
+        }
+
+        internal override ColorResource CopyAs(string newName, bool shared = true)
+        {
+            return new SolidColor(newName, Color, Opacity, shared);
         }
 
         protected override void OnReadXml(XmlDeserializationEventArgs e)

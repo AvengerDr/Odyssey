@@ -1,11 +1,10 @@
 ﻿namespace Odyssey.Talos.Messages
 {
-    public enum ChangeType
+    public enum UpdateType
     {
         Undefined,
-        Added,
-        Removed,
-        Loaded,
+        Add,
+        Remove,
     }
 
     public enum MessagePriority

@@ -38,6 +38,8 @@ namespace Odyssey.Graphics
             Resource = brush;
         }
 
+        public bool Shared { get { return ColorResource.Shared; } }
+
         [Animatable]
         public float Opacity
         {
@@ -68,7 +70,12 @@ namespace Odyssey.Graphics
         /// <param name="from">From the Texture1D.</param>
         public static implicit operator SharpDX.Direct2D1.Brush(Brush from)
         {
-            return from == null ? null : from.Resource ?? null;
+            return from == null ? null : from.Resource;
+        }
+
+        public static implicit operator ColorResource(Brush from)
+        {
+            return from == null ? null : from.ColorResource;
         }
 
         public static implicit operator ComObject(Brush from)

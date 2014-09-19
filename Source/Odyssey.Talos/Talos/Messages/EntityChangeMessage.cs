@@ -2,9 +2,9 @@
 {
     public class EntityChangeMessage : EntityMessage
     {
-        public ChangeType Action { get; private set; }
+        public UpdateType Action { get; private set; }
 
-        public EntityChangeMessage(Entity source, ChangeType action, bool isSynchronous = false)
+        public EntityChangeMessage(Entity source, UpdateType action, bool isSynchronous = false)
             : base(source, isSynchronous)
         {
             Action = action;

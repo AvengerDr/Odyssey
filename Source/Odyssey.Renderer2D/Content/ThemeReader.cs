@@ -9,22 +9,16 @@ namespace Odyssey.Content
     {
         public object ReadContent(IAssetProvider assetManager, ref ContentReaderParameters parameters)
         {
-            var serializer = new XmlSerializer(typeof (Theme));
             var xmlReaderSettings = new XmlReaderSettings()
             {
                 IgnoreComments = true,
                 IgnoreWhitespace = true,
             };
-            Theme theme = (Theme)serializer.Deserialize(XmlReader.Create(parameters.Stream, xmlReaderSettings));
             var content = parameters.Services.GetService<IAssetProvider>();
-            if (content.Contains(parameters.AssetName))
-            {
-                var existingTheme = content.Load<Theme>(parameters.AssetName);
-                existingTheme.AddResources(theme.Resources);
-                return existingTheme;
-            }
-            else
-                return theme;
+            Theme theme = content.Contains(parameters.AssetName) ? content.Load<Theme>(parameters.AssetName) : new Theme();
+            theme.DeserializeXml(theme, XmlReader.Create(parameters.Stream, xmlReaderSettings));
+
+            return theme;
         }
     }
 }

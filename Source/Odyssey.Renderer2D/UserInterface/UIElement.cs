@@ -24,7 +24,6 @@ using Odyssey.UserInterface.Controls;
 using Odyssey.UserInterface.Data;
 using Odyssey.UserInterface.Serialization;
 using Odyssey.UserInterface.Style;
-using Odyssey.UserInterface.Xml;
 using Odyssey.Utilities.Text;
 using SharpDX;
 using System;
@@ -100,8 +99,11 @@ namespace Odyssey.UserInterface
         /// </summary>
         /// <param name="cursorLocation">The location of the mouse cursor</param>
         /// <returns><b>True</b> if the cursor is inside the control's boundaries. <b>False</b>,
-        /// otherwise.</returns> <seealso cref="Intersection"/>
-        public abstract bool Contains(Vector2 cursorLocation);
+        /// otherwise.</returns>
+        public virtual bool Contains(Vector2 cursorLocation)
+        {
+            return BoundingRectangle.Contains(cursorLocation);
+        }
 
         public abstract void Render();
 

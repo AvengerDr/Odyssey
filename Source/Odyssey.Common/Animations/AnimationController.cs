@@ -69,7 +69,7 @@ namespace Odyssey.Animations
                 target = value;
                 foreach (var kvp in walkers)
                 {
-                    var targetPropertyName = kvp.Key;
+                    string targetPropertyName = kvp.Key.Split('.').Last();
                     var walker = kvp.Value;
                     walker.SetTarget(target, targetPropertyName);
                 }
@@ -145,7 +145,7 @@ namespace Odyssey.Animations
                     ObjectWalker walker = new ObjectWalker(realTarget, curve.TargetProperty);
 
                     var requiresCaching = realTarget as IRequiresCaching;
-                    string curveKey = curve.Name;
+                    string curveKey = curve.Key;
                     if (requiresCaching != null)
                     {
                         var newCurve = requiresCaching.CacheAnimation(walker.CurrentMember.DeclaringType, walker.CurrentMember.Name, curve);
@@ -154,7 +154,7 @@ namespace Odyssey.Animations
                             animation.RemoveCurve(curve.TargetProperty);
                             animation.AddCurve(newCurve);
                             walker.SetTarget(requiresCaching, newCurve.TargetProperty);
-                            curveKey = newCurve.Name;
+                            curveKey = newCurve.Key;
                             cachedAnimations++;
                         }
                     }
@@ -243,7 +243,7 @@ namespace Odyssey.Animations
             {
                 animation.Update(time, (curve, value) =>
                 {
-                    var walker = GetWalker(curve.Name);
+                    var walker = GetWalker(curve.Key);
                     walker.WriteValue(value);
                 });
             }

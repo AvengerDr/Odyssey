@@ -6,12 +6,12 @@ using Point = SharpDX.Vector2;
 
 namespace Odyssey.Geometry.Primitives
 {
-    public abstract class CurveBase
+    public abstract class CurveBase<TPoint>
     {
         private readonly int degree;
-        private readonly List<Point> controlPoints;
-        public Point FirstControlPoint { get { return controlPoints[0]; } }
-        public Point LastControlPoint { get { return controlPoints[controlPoints.Count - 1]; } }
+        private readonly List<TPoint> controlPoints;
+        public TPoint FirstControlPoint { get { return controlPoints[0]; } }
+        public TPoint LastControlPoint { get { return controlPoints[controlPoints.Count - 1]; } }
 
         public int Degree
         {
@@ -23,25 +23,25 @@ namespace Odyssey.Geometry.Primitives
         protected CurveBase(int degree)
         {
             this.degree = degree;
-            controlPoints = new List<Point>();
+            controlPoints = new List<TPoint>();
         }
 
-        public abstract Point[] Calculate(Real alpha);
+        public abstract TPoint[] Calculate(Real alpha);
 
-        public abstract Point Evaluate(Real t);
+        public abstract TPoint Evaluate(Real t);
 
-        public void AddPoint(Point point)
+        public void AddPoint(TPoint point)
         {
             controlPoints.Add(point);
         }
 
-        public void AddPoints(IEnumerable<Point> points)
+        public void AddPoints(IEnumerable<TPoint> points)
         {
             Contract.Requires<ArgumentNullException>(points!=null, "points");
             controlPoints.AddRange(points);
         }
 
-        public Point this[int index]
+        public TPoint this[int index]
         {
             get { return controlPoints[index]; }
             set { controlPoints[index] = value; }

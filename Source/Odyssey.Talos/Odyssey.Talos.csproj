@@ -24,6 +24,10 @@
       <Project>{26fd6c22-2141-4994-85cb-5a730c910aa2}</Project>
       <Name>Odyssey.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Odyssey.Geometry\Odyssey.Geometry.csproj">
+      <Project>{ff735354-ff98-4b1e-9560-ac65d028fdf8}</Project>
+      <Name>Odyssey.Geometry</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Odyssey.Interaction\Odyssey.Interaction.csproj">
       <Project>{7740a46f-0809-49d2-bd34-71f6d8b6d2cc}</Project>
       <Name>Odyssey.Interaction</Name>
@@ -64,6 +68,7 @@
     <Compile Include="Talos\Components\IContentComponent.cs" />
     <Compile Include="Talos\Components\ITextureResource.cs" />
     <Compile Include="Talos\Components\OptionalComponentAttribute.cs" />
+    <Compile Include="Talos\Components\PathComponent.cs" />
     <Compile Include="Talos\Components\PostProcessComponent.Bloom.cs" />
     <Compile Include="Talos\Components\PostProcessComponent.Glow.cs" />
     <Compile Include="Talos\Components\PostProcessComponent.cs" />
@@ -132,7 +137,7 @@
     <Compile Include="Talos\Messages\MessageEventArgs.cs" />
     <Compile Include="Talos\Messages\MessageQueue.cs" />
     <Compile Include="Talos\Messages\Messenger.cs" />
-    <Compile Include="Talos\Messages\OptimizationCompleteMessage.cs" />
+    <Compile Include="Talos\Messages\CommandUpdateMessage.cs" />
     <Compile Include="Talos\Messages\PropertyChangeMessage.cs" />
     <Compile Include="Talos\Messages\ComponentMessage.cs" />
     <Compile Include="Talos\Nodes\LightNode.cs" />

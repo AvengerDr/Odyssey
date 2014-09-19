@@ -31,10 +31,5 @@ namespace Odyssey.Graphics.Drawing
         }
 
         public float CutCornerLength { get; set; }
-
-        public override bool Contains(Vector2 cursorLocation)
-        {
-            return BoundingRectangle.Contains(cursorLocation);
-        }
     }
 }

@@ -1,16 +1,12 @@
 ﻿#region Using Directives
 
-using Odyssey.Content;
-using Odyssey.Graphics;
 using Odyssey.Graphics.Drawing;
-using Odyssey.UserInterface.Style;
 using SharpDX;
 using SharpDX.Direct2D1;
-using SharpDX.Direct3D11;
-using SharpDX.DirectWrite;
 using System;
 using System.Diagnostics.Contracts;
 using Brush = Odyssey.Graphics.Brush;
+using TextFormat = Odyssey.UserInterface.Style.TextFormat;
 using D2DFactory = SharpDX.Direct2D1.Factory1;
 using Device = SharpDX.Direct2D1.Device;
 using DeviceContext = SharpDX.Direct2D1.DeviceContext;

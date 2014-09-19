@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Linq;
 using System.Xml;
 using Odyssey.Serialization;
 using Odyssey.Utilities.Text;
@@ -15,15 +16,16 @@ namespace Odyssey.Graphics
         public Vector2 EndPoint { get; private set; }
 
         public LinearGradient()
-            : base(string.Format("{0}{1:D2}", typeof(LinearGradient).Name, ++count), ColorType.LinearGradient)
+            : this(string.Format("{0}{1:D2}", typeof(LinearGradient).Name, ++count), Vector2.Zero, Vector2.UnitX, Enumerable.Empty<GradientStop>())
         {
         }
 
-        public LinearGradient(string name, Vector2 startPoint, Vector2 endPoint, IEnumerable<GradientStop> gradientStops, ExtendMode extendMode = ExtendMode.Clamp) : base(name, gradientStops, extendMode, ColorType.LinearGradient)
+        public LinearGradient(string name, Vector2 startPoint, Vector2 endPoint, IEnumerable<GradientStop> gradientStops, ExtendMode extendMode = ExtendMode.Clamp, float opacity = 1.0f, bool shared=true)  
+            : base(name, gradientStops, extendMode, ColorType.LinearGradient, opacity, shared)
         {
             Contract.Requires<ArgumentNullException>(gradientStops != null, "gradientStops");
-            this.StartPoint = startPoint;
-            this.EndPoint = endPoint;
+            StartPoint = startPoint;
+            EndPoint = endPoint;
         }
 
         public static LinearGradient Vertical(string name, IEnumerable<GradientStop> gradientStops)
@@ -46,9 +48,9 @@ namespace Odyssey.Graphics
             base.OnReadXml(e);
         }
 
-        internal override Gradient CopyAs(string newResourceName)
+        internal override ColorResource CopyAs(string newResourceName, bool shared = true)
         {
-            return new LinearGradient(newResourceName, StartPoint, EndPoint, GradientStops, GradientStops.ExtendMode);
+            return new LinearGradient(newResourceName, StartPoint, EndPoint, GradientStops, GradientStops.ExtendMode, Opacity, shared);
         }
 
         #region IEquatable<Gradient>

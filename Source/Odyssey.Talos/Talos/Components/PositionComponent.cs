@@ -1,15 +1,15 @@
 ﻿using System.Diagnostics;
+using Odyssey.Animations;
 using SharpDX;
-using SharpYaml;
-using SharpYaml.Serialization;
 
 namespace Odyssey.Talos.Components
 {
     [DebuggerDisplay("{Position}: ({Position})")]
-    public class PositionComponent : Component
+    public class PositionComponent : Component, IPosition
     {
         private Vector3 position;
 
+        [Animatable]
         public Vector3 Position
         {
             get { return position; }

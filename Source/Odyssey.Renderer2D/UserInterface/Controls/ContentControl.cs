@@ -56,7 +56,7 @@ namespace Odyssey.UserInterface.Controls
                 Content.Render();
         }
 
-        protected override void OnInitializing(ControlEventArgs e)
+        protected override void OnInitializing(EventArgs e)
         {
             base.OnInitializing(e);
             if (Content != null)

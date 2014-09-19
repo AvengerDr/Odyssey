@@ -7,10 +7,10 @@ namespace Odyssey.UserInterface.Style
 {
     public interface IStyleService : IResourceProvider
     {
-        TextDescription GetTextStyle(string themeName, string id);
         FontCollection FontCollection { get; }
         Theme GetTheme(string themeName);
         void AddResource(IResource resource, bool shared = true);
-        Brush CreateOrRetrieveColorResource(Direct2DDevice device, ColorResource colorResource, bool shared = true);
+        Brush CreateOrRetrieveColorResource(ColorResource colorResource, bool shared = true);
+        TextFormat CreateOrRetrieveTextResource(TextStyle textStyle, bool shared = true);
     }
 }

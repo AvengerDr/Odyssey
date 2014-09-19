@@ -13,10 +13,9 @@ namespace Odyssey.UserInterface.Controls
 
         public RichTextBox() : this(typeof(RichTextBox).Name) { }
 
-        protected RichTextBox(string controlClass)
-            : base(controlClass)
-        {
-        }
+        protected RichTextBox(string controlStyleClass, string textStyleClass = UserInterface.Style.TextStyle.Default)
+            : base(controlStyleClass, textStyleClass)
+        { }
 
         public IEnumerable<AdvancedLabel> Blocks { get { return Controls.OfType<AdvancedLabel>(); } }
 
@@ -54,25 +53,20 @@ namespace Odyssey.UserInterface.Controls
             return DataTemplate;
         }
 
-        protected override void OnTextDefinitionChanged(EventArgs e)
+        protected override void OnTextStyleChanged(EventArgs e)
         {
-            base.OnTextDefinitionChanged(e);
+            base.OnTextStyleChanged(e);
             if (lineHeight == 0)
-                LineHeight = TextDescription.Size;
+                LineHeight = TextStyle.Size;
             if (DataTemplate != null)
                 ((Control)DataTemplate.VisualTree).TextStyleClass = TextStyleClass;
         }
 
-        public override bool Contains(Vector2 cursorLocation)
-        {
-            return BoundingRectangle.Contains(cursorLocation);
-        }
-
         protected internal override void Arrange()
         {
+            base.Arrange();
             if (!Controls.IsEmpty)
                 UserInterface.Style.Layout.UpdateLayoutVertical(this, Controls);
-            base.Arrange();
         }
     }
 }

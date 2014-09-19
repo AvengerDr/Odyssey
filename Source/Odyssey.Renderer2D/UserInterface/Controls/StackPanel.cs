@@ -25,10 +25,5 @@ namespace Odyssey.UserInterface.Controls
 {
     public class StackPanel : StackPanelBase
     {
-        public override bool Contains(Vector2 cursorLocation)
-        {
-            return BoundingRectangle.Contains(cursorLocation);
-        }
-
     }
 }

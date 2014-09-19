@@ -92,6 +92,13 @@ namespace Odyssey.Utilities.Text
             return String.Format(CultureInfo.InvariantCulture, "X:{0:F0} Y:{1:F0} Z:{2:F0}", v.X, v.Y, v.Z);
         }
 
+
+        internal static TEnum ParseEnum<TEnum>(string enumValue)
+            where TEnum : struct
+        {
+            return (TEnum) Enum.Parse(typeof (TEnum), enumValue);
+        }
+
         internal static string ParseResource(string s)
         {
             Contract.Requires<ArgumentNullException>(!String.IsNullOrEmpty(s), "String cannot be null");

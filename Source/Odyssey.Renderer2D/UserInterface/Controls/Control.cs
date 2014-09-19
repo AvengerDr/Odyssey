@@ -1,4 +1,5 @@
-﻿
+﻿#region License
+
 // Copyright © 2013-2014 Avengers UTD - Adalberto L. Simeone
 // 
 // The Odyssey Engine is free software: you can redistribute it and/or modify
@@ -10,45 +11,95 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details at http://gplv3.fsf.org/
 
+#endregion
+
+#region Using Directives
+
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Odyssey.Content;
-using Odyssey.Graphics;
 using Odyssey.Graphics.Drawing;
 using Odyssey.UserInterface.Style;
 using Odyssey.Utilities.Logging;
 using SharpDX;
 
+#endregion
+
 namespace Odyssey.UserInterface.Controls
 {
     public abstract class Control : UIElement, IControl, IResourceProvider
     {
-        public const string DefaultText = "Default";
-
         private string controlStyleClass;
         private ControlStyle style;
-        private TextDescription textDescription;
+        private TextStyle textStyle;
         private string textStyleClass;
         private VisualState visualState;
 
-        /// <summary>
-        /// Occurs when the <see cref="UserInterface.Style.ControlStyle"/> property value changes.
-        /// </summary>
-        public event EventHandler<EventArgs> ControlDefinitionChanged;
-
-        /// <summary>
-        /// Occurs when the <see cref="UserInterface.Style.TextStyle"/> property value changes.
-        /// </summary>
-        public event EventHandler<EventArgs> TextStyleChanged;
-
-        protected Control(string styleClass, string textStyleClass = DefaultText)
+        protected Control(string controlStyleClass, string textStyleClass = TextStyle.Default)
         {
-            controlStyleClass = styleClass;
+            this.controlStyleClass = controlStyleClass;
             this.textStyleClass = textStyleClass;
         }
 
         public Thickness Padding { get; set; }
+
+        public string StyleClass
+        {
+            get { return controlStyleClass; }
+            set
+            {
+                if (string.Equals(controlStyleClass, value))
+                    return;
+                controlStyleClass = value;
+                if (!DesignMode)
+                    ApplyControlDescription();
+            }
+        }
+
+        protected bool IsVisual
+        {
+            get { return VisualState != null; }
+        }
+
+        /// <summary>
+        /// Gets or sets the <see cref = "TextStyle" /> to use for this control.
+        /// </summary>
+        /// <value>The <see cref = "TextStyle" /> object that contains information on how to
+        /// format the text of this control.</value>
+        public TextStyle TextStyle
+        {
+            get { return textStyle; }
+            private set
+            {
+                if (textStyle == value) return;
+                textStyle = value;
+                OnTextStyleChanged(EventArgs.Empty);
+            }
+        }
+
+        public string TextStyleClass
+        {
+            get { return textStyleClass; }
+            set
+            {
+                if (string.Equals(textStyleClass, value))
+                    return;
+
+                textStyleClass = value;
+                if (DesignMode)
+                    return;
+                
+                ApplyTextDescription();
+                OnTextStyleChanged(EventArgs.Empty);
+            }
+        }
+
+        protected ControlStatus ActiveStatus { get; set; }
+
+        protected VisualState VisualState
+        {
+            get { return visualState; }
+        }
 
         /// <summary>
         /// Gets or sets the <see cref = "Style" /> to use for this control.
@@ -67,57 +118,6 @@ namespace Odyssey.UserInterface.Controls
             }
         }
 
-        public string StyleClass
-        {
-            get { return controlStyleClass; }
-            set
-            {
-                if (string.Equals(controlStyleClass, value))
-                    return;
-                controlStyleClass = value;
-                if (!DesignMode)
-                    ApplyControlDescription();
-            }
-        }
-
-        protected bool IsVisual { get { return VisualState != null; } }
-
-        /// <summary>
-        /// Gets or sets the <see cref = "TextDescription" /> to use for this control.
-        /// </summary>
-        /// <value>The <see cref = "TextDescription" /> object that contains information on how to
-        /// format the text of this control.</value>
-        public TextDescription TextDescription
-        {
-            get { return textDescription; }
-            private set
-            {
-                if (textDescription == value) return;
-                textDescription = value;
-                OnTextDefinitionChanged(EventArgs.Empty);
-            }
-        }
-
-        public string TextStyleClass
-        {
-            get { return textStyleClass; }
-            set
-            {
-                if (string.Equals(textStyleClass, value))
-                    return;
-
-                textStyleClass = value;
-                if (!DesignMode)
-                    ApplyTextDescription();
-            }
-        }
-        protected ControlStatus ActiveStatus { get; set; }
-
-        protected VisualState VisualState
-        {
-            get { return visualState; }
-        }
-
         public override void Render()
         {
             if (!IsVisual)
@@ -127,13 +127,23 @@ namespace Odyssey.UserInterface.Controls
                 shape.Render();
         }
 
+        /// <summary>
+        /// Occurs when the <see cref="UserInterface.Style.ControlStyle"/> property value changes.
+        /// </summary>
+        public event EventHandler<EventArgs> ControlDefinitionChanged;
+
+        /// <summary>
+        /// Occurs when the <see cref="UserInterface.Style.TextStyle"/> property value changes.
+        /// </summary>
+        public event EventHandler<EventArgs> TextStyleChanged;
+
         protected internal override UIElement Copy()
         {
-            Control newControl = (Control)base.Copy();
+            Control newControl = (Control) base.Copy();
             newControl.Style = Style;
             newControl.Padding = Padding;
             newControl.TextStyleClass = TextStyleClass;
-            CopyEvents(typeof(Control), this, newControl);
+            CopyEvents(typeof (Control), this, newControl);
             return newControl;
         }
 
@@ -178,9 +188,13 @@ namespace Odyssey.UserInterface.Controls
 
         protected virtual void ApplyTextDescription()
         {
-            // Todo refactor text themes
-            var textDescription = Overlay.Services.GetService<IStyleService>().GetTextStyle(Overlay.TextTheme, TextStyleClass);
-            TextDescription = textDescription;
+            if (!Overlay.Theme.ContainsResource(TextStyleClass))
+            {
+                LogEvent.UserInterface.Warning("TextStyle '{0}' not found", TextStyleClass);
+                return;
+            }
+
+            TextStyle = Overlay.Theme.GetResource<TextStyle>(TextStyleClass);
         }
 
         /// <summary>
@@ -194,24 +208,24 @@ namespace Odyssey.UserInterface.Controls
                 RaiseEvent(ControlDefinitionChanged, this, e);
         }
 
-        protected override void OnDesignModeChanged(ControlEventArgs e)
+        protected override void OnDesignModeChanged(EventArgs e)
         {
             base.OnDesignModeChanged(e);
             if (!IsVisual || ActiveStatus == ControlStatus.None)
                 return;
 
             foreach (Shape element in VisualState)
-                element.DesignMode = e.Control.DesignMode;
+                element.DesignMode = DesignMode;
         }
 
-        protected override void OnInitialized(ControlEventArgs e)
+        protected override void OnInitialized(EventArgs e)
         {
             base.OnInitialized(e);
             if (string.Equals(StyleClass, "Empty")) return;
             ActiveStatus = IsEnabled ? ControlStatus.Enabled : ControlStatus.Disabled;
         }
 
-        protected override void OnInitializing(ControlEventArgs e)
+        protected override void OnInitializing(EventArgs e)
         {
             base.OnInitializing(e);
             ApplyControlDescription();
@@ -223,7 +237,7 @@ namespace Odyssey.UserInterface.Controls
         /// </summary>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event
         /// data.</param>
-        protected virtual void OnTextDefinitionChanged(EventArgs e)
+        protected virtual void OnTextStyleChanged(EventArgs e)
         {
             if (!DesignMode)
                 RaiseEvent(TextStyleChanged, this, e);
@@ -235,17 +249,6 @@ namespace Odyssey.UserInterface.Controls
         }
 
         #region IResourceProvider
-
-        protected virtual bool ContainsResource(string resourceName)
-        {
-            return VisualState.ContainsResource(resourceName);
-        }
-
-        protected virtual TResource GetResource<TResource>(string resourceName)
-            where TResource : class, IResource
-        {
-            return GetShape(resourceName) as TResource;
-        }
 
         protected virtual IEnumerable<IResource> Resources
         {
@@ -264,10 +267,20 @@ namespace Odyssey.UserInterface.Controls
 
         bool IResourceProvider.ContainsResource(string resourceName)
         {
-            return ContainsResource(resourceName) ;
+            return ContainsResource(resourceName);
+        }
+
+        protected virtual bool ContainsResource(string resourceName)
+        {
+            return VisualState.ContainsResource(resourceName);
+        }
+
+        protected virtual TResource GetResource<TResource>(string resourceName)
+            where TResource : class, IResource
+        {
+            return GetShape(resourceName) as TResource;
         }
 
         #endregion
-
     }
 }

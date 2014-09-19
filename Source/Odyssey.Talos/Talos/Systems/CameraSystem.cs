@@ -50,13 +50,13 @@ namespace Odyssey.Talos.Systems
                 var entity = mEntity.Source;
                 var camera = entity.GetComponent<CameraComponent>();
                 
-                if (mEntity.Action == ChangeType.Added)
+                if (mEntity.Action == UpdateType.Add)
                 {
                     ResetCamera(entity);
-                    Messenger.Send(new CameraMessage(entity, camera, ChangeType.Added));
+                    Messenger.Send(new CameraMessage(entity, camera, UpdateType.Add));
                 }
-                else if (mEntity.Action == ChangeType.Removed)
-                    Messenger.Send(new CameraMessage(entity, camera, ChangeType.Removed));
+                else if (mEntity.Action == UpdateType.Remove)
+                    Messenger.Send(new CameraMessage(entity, camera, UpdateType.Remove));
             }
         }
 

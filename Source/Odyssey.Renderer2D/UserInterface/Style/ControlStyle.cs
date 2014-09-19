@@ -31,7 +31,7 @@ using Odyssey.UserInterface.Controls;
 
 namespace Odyssey.UserInterface.Style
 {
-    public sealed class ControlStyle : ISerializableResource, IResource, IResourceProvider
+    public sealed class ControlStyle : ISerializableResource, IResourceProvider
     {
         public const string Empty = "Empty";
         internal const string Error = "Error";
@@ -60,7 +60,7 @@ namespace Odyssey.UserInterface.Style
             string margin = xmlReader.GetAttribute("Margin");
             Margin = String.IsNullOrEmpty(margin) ? Thickness.Empty : StyleHelper.DecodeThickness(margin);
 
-            string textStyleClass = xmlReader.GetAttribute("TextStyleClass");
+            string textStyleClass = xmlReader.GetAttribute("TextStyle");
             TextStyleClass = String.IsNullOrEmpty(textStyleClass) ? "Default" : textStyleClass;
 
             string padding = xmlReader.GetAttribute("Padding");

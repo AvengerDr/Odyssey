@@ -23,12 +23,12 @@ namespace Odyssey.Talos.Systems
 
         public override void Start()
         {
-            Messenger.Register<OptimizationCompleteMessage>(this);
+            Messenger.Register<CommandUpdateMessage>(this);
         }
 
         public override void Stop()
         {
-            Messenger.Unregister<OptimizationCompleteMessage>(this);
+            Messenger.Unregister<CommandUpdateMessage>(this);
         }
 
         public bool BeginRender()
@@ -51,9 +51,9 @@ namespace Odyssey.Talos.Systems
 
         public override void Process(ITimeService time)
         {
-            if (!MessageQueue.HasItems<OptimizationCompleteMessage>()) return;
+            if (!MessageQueue.HasItems<CommandUpdateMessage>()) return;
 
-            var mOptimization = MessageQueue.Dequeue<OptimizationCompleteMessage>();
+            var mOptimization = MessageQueue.Dequeue<CommandUpdateMessage>();
             if (!mOptimization.Commands.Any())
                 return;
 
@@ -95,8 +95,8 @@ namespace Odyssey.Talos.Systems
                 commandManager.AddLast(sv.Analyze());
                 commandManager.Initialize();
 
-                if (MessageQueue.HasItems<OptimizationCompleteMessage>())
-                    throw new InvalidOperationException(string.Format("Multiple {0}s found", typeof(OptimizationCompleteMessage).Name));
+                if (MessageQueue.HasItems<CommandUpdateMessage>())
+                    throw new InvalidOperationException(string.Format("Multiple {0}s found", typeof(CommandUpdateMessage).Name));
                 var postProcessCommands = commandManager.OfType<IPostProcessCommand>().ToArray();
 
                 for (int i = 1; i < postProcessCommands.Length; i++)

@@ -6,6 +6,7 @@ using Odyssey.Talos.Initializers;
 using Odyssey.Talos.Messages;
 using System;
 using System.Linq;
+using UpdateType = Odyssey.Graphics.Effects.UpdateType;
 
 namespace Odyssey.Talos.Systems
 {

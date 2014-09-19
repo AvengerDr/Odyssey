@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SharpDX;
-using Real = System.Single;
+﻿using Real = System.Single;
 using Point = SharpDX.Vector2;
 
 namespace Odyssey.Geometry
@@ -15,6 +9,16 @@ namespace Odyssey.Geometry
         {
             vector.X += xOffset;
             vector.Y += yOffset;
+        }
+
+        /// <summary>
+        /// Calculates a vector perpendicular to the source vector.
+        /// </summary>
+        /// <param name="value">The source vector.</param>
+        /// <returns>The resulting perpendicular vector.</returns>
+        public static Point Perp(this Point value)
+        {
+            return new Point(-value.Y, value.X);
         }
     }
 }

@@ -40,7 +40,6 @@
     <Compile Include="Content\NativeFontFileEnumerator.cs" />
     <Compile Include="Content\NativeFontFileStream.cs" />
     <Compile Include="Content\NativeFontLoader.cs" />
-    <Compile Include="Content\TextDefinitionsReader.cs" />
     <Compile Include="Content\ThemeReader.cs" />
     <Compile Include="Engine\BackBufferSurface.cs" />
     <Compile Include="Engine\Bitmap.cs" />
@@ -62,12 +61,16 @@
     <Compile Include="Graphics\Drawing\IShape.cs" />
     <Compile Include="Graphics\Drawing\Line.cs" />
     <Compile Include="Graphics\TextRenderer.cs" />
+    <Compile Include="Organization\Commands\UserInterfaceRenderCommand.cs" />
+    <Compile Include="UserInterface\Behaviors\AnchorBehaviour.cs" />
     <Compile Include="UserInterface\Behaviors\Behavior.cs" />
     <Compile Include="UserInterface\Behaviors\BehaviorCollection.cs" />
+    <Compile Include="UserInterface\Behaviors\DebugBehaviour.cs" />
     <Compile Include="UserInterface\Behaviors\DraggableBehavior.cs" />
     <Compile Include="UserInterface\Controls\AdvancedLabel.cs" />
     <Compile Include="UserInterface\Controls\Border.cs" />
     <Compile Include="UserInterface\Behaviors\GenericBehavior.cs" />
+    <Compile Include="UserInterface\Controls\IDesktopOverlay.cs" />
     <Compile Include="UserInterface\Controls\RichTextBox.cs" />
     <Compile Include="UserInterface\Controls\TextEventArgs.cs" />
     <Compile Include="UserInterface\Data\BindingCollection.cs" />
@@ -77,8 +80,9 @@
     <Compile Include="Graphics\LinearGradientBrush.cs" />
     <Compile Include="Graphics\Drawing\PolygonBase.cs" />
     <Compile Include="Graphics\Drawing\Rectangle.cs" />
+    <Compile Include="UserInterface\Style\TextFormat.cs" />
+    <Compile Include="UserInterface\Style\TextStyle.cs" />
     <Compile Include="UserInterface\Style\Theme.cs" />
-    <None Include="UserInterface\Serialization\XmlVisualState.cs" />
     <None Include="Graphics\StereoRenderer.cs" />
     <Compile Include="Graphics\Drawing\Shape.cs" />
     <Compile Include="Graphics\Brush.cs" />
@@ -103,7 +107,6 @@
     <Compile Include="UserInterface\Controls\ContentControl.cs" />
     <Compile Include="UserInterface\Controls\Control.cs" />
     <Compile Include="UserInterface\Controls\ControlCollection.cs" />
-    <Compile Include="UserInterface\Controls\ControlEventArgs.cs" />
     <Compile Include="UserInterface\Controls\Enums.cs" />
     <Compile Include="UserInterface\Controls\FpsCounter.cs" />
     <Compile Include="UserInterface\Controls\IContainer.cs" />
@@ -133,7 +136,6 @@
     <Compile Include="UserInterface\Style\Layout.cs" />
     <Compile Include="UserInterface\Style\VectorArtParser.cs" />
     <Compile Include="UserInterface\Style\StyleManager.cs" />
-    <Compile Include="UserInterface\Style\TextDescription.cs" />
     <Compile Include="UserInterface\Style\TextEnums.cs" />
     <Compile Include="UserInterface\Style\Thickness.cs" />
     <Compile Include="UserInterface\Style\VectorCommand.cs" />
@@ -146,15 +148,7 @@
     <Compile Include="UserInterface\UIElement.Methods.cs" />
     <Compile Include="UserInterface\UIElement.Properties.cs" />
     <Compile Include="UserInterface\UserInterfaceManager.cs" />
-    <Compile Include="UserInterface\Serialization\XmlColor.cs" />
-    <None Include="UserInterface\Serialization\XmlControl.cs" />
-    <None Include="UserInterface\Serialization\XmlUIElement.cs" />
-    <None Include="UserInterface\Serialization\XmlContainers.cs" />
-    <None Include="UserInterface\Serialization\XmlControlStyle.cs" />
-    <None Include="UserInterface\Serialization\XmlGradient.cs" />
     <Compile Include="UserInterface\Style\StyleHelper.cs" />
-    <None Include="UserInterface\Serialization\XmlShape.cs" />
-    <Compile Include="UserInterface\Serialization\XmlTextDescription.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Odyssey.Common\Odyssey.Common.csproj">

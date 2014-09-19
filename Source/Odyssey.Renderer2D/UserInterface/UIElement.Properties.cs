@@ -34,13 +34,24 @@ namespace Odyssey.UserInterface
         private float height;
         private Matrix3x2 transform;
         private float width;
+        private object dataContext;
 
         public RectangleF BoundingRectangle
         {
             get { return boundingRectangle; }
         }
 
-        public object DataContext { get; set; }
+        public object DataContext
+        {
+            get { return dataContext; }
+            set
+            {
+                if (dataContext == value)
+                    return;
+                dataContext = value;
+                OnDataContextChanged(EventArgs.Empty);
+            }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether the control is in design mode.
@@ -57,7 +68,7 @@ namespace Odyssey.UserInterface
                 if (designMode != value)
                 {
                     designMode = value;
-                    OnDesignModeChanged(new ControlEventArgs(this));
+                    OnDesignModeChanged(new EventArgs());
                 }
             }
         }

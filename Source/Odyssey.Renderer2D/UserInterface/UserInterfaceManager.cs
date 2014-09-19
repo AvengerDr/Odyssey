@@ -101,7 +101,6 @@ namespace Odyssey.UserInterface
         protected void Process(PointerEventArgs pointerEvent)
         {
             PointerPoint point = pointerEvent.CurrentPoint;
-            //LogEvent.UserInterface.Info("Processing {0:000}:[{1},{2}]", pointerEvent.EventId, pointerEvent.CurrentPoint.Position.X, pointerEvent.CurrentPoint.Position.Y);
 
             switch (point.EventType)
             {
@@ -145,120 +144,6 @@ namespace Odyssey.UserInterface
         }
 
         #region UI Input
-
-        //public static void ProcessPointerMovement(PointerEventArgs e)
-        //{
-        //    if (LastPointerEvent.CurrentPoint.TimeStamp < e.CurrentPoint.TimeStamp)
-        //        LastPointerEvent = e;
-        //    bool handled = false;
-
-        //    // Checks whether a control has captured the mouse pointer
-        //    if (CurrentOverlay.CaptureControl != null)
-        //    {
-        //        CurrentOverlay.CaptureControl.ProcessPointerMovement(e);
-        //        return;
-        //    }
-
-        //    //// Check whether a modal window is displayed
-        //    //if (CurrentOverlay.WindowManager.Foremost != null && CurrentOverlay.WindowManager.Foremost.IsModal)
-        //    //{
-        //    //    foreach (
-        //    //        BaseControl control in
-        //    //            TreeTraversal.PostOrderControlInteractionVisit(CurrentOverlay.WindowManager.Foremost))
-        //    //    {
-        //    //        handled = control.ProcessMouseMovement(e);
-        //    //        if (handled)
-        //    //        {
-        //    //            return;
-        //    //        }
-        //    //    }
-        //    //    CurrentOverlay.WindowManager.Foremost.ProcessMouseMovement(e);
-
-        //    //    return;
-        //    //}
-
-        //    // Proceeds with the rest
-        //    foreach (UIElement control in TreeTraversal.PostOrderControlInteractionVisit(CurrentOverlay))
-        //    {
-        //        handled = control.ProcessPointerMovement(e);
-        //        if (handled)
-        //            break;
-        //    }
-        //    if (!handled)
-        //        CurrentOverlay.ProcessPointerMovement(e);
-        //}
-
-        //public static void ProcessPointerPress(PointerEventArgs e)
-        //{
-        //    if (LastPointerEvent.CurrentPoint.TimeStamp < e.CurrentPoint.TimeStamp)
-        //        LastPointerEvent = e;
-        //    bool handled = false;
-        //    //// Checks whether a modal window is displayed
-        //    //if (CurrentOverlay.WindowManager.Foremost != null && CurrentOverlay.WindowManager.Foremost.IsModal)
-        //    //{
-        //    //    foreach (
-        //    //        BaseControl control in
-        //    //            TreeTraversal.PostOrderControlInteractionVisit(CurrentOverlay.WindowManager.Foremost))
-        //    //    {
-        //    //        handled = control.ProcessMousePress(e);
-        //    //        if (handled)
-        //    //            return;
-        //    //    }
-        //    //    CurrentOverlay.WindowManager.Foremost.ProcessMousePress(e);
-        //    //    return;
-        //    //}
-
-        //    // Proceeds with the rest
-        //    foreach (UIElement control in TreeTraversal.PostOrderControlInteractionVisit(CurrentOverlay))
-        //    {
-        //        handled = control.ProcessPointerPressed(e);
-        //        if (handled)
-        //            break;
-        //    }
-
-        //    if (!handled)
-        //        CurrentOverlay.ProcessPointerPressed(e);
-        //}
-
-        //public static void ProcessPointerRelease(PointerEventArgs e)
-        //{
-        //    if (LastPointerEvent.CurrentPoint.TimeStamp < e.CurrentPoint.TimeStamp)
-        //        LastPointerEvent = e;
-        //    bool handled = false;
-
-        //    // Checks whether a control has captured the mouse pointer
-        //    if (CurrentOverlay.CaptureControl != null)
-        //    {
-        //        CurrentOverlay.CaptureControl.ProcessPointerRelease(e);
-        //        return;
-        //    }
-
-        //    //// Checks whether a modal window is displayed
-        //    //if (CurrentOverlay.WindowManager.Foremost != null && CurrentOverlay.WindowManager.Foremost.IsModal)
-        //    //{
-        //    //    foreach (
-        //    //        BaseControl control in
-        //    //            TreeTraversal.PostOrderControlInteractionVisit(CurrentOverlay.WindowManager.Foremost))
-        //    //    {
-        //    //        handled = control.ProcessMouseRelease(e);
-        //    //        if (handled)
-        //    //            return;
-        //    //    }
-        //    //    CurrentOverlay.WindowManager.Foremost.ProcessMouseRelease(e);
-        //    //    return;
-        //    //}
-
-        //    // Proceeds with the rest
-        //    foreach (UIElement control in TreeTraversal.PostOrderControlInteractionVisit(CurrentOverlay))
-        //    {
-        //        handled = control.ProcessPointerRelease(e);
-        //        if (handled)
-        //            break;
-        //    }
-
-        //    if (!handled)
-        //        CurrentOverlay.ProcessPointerRelease(e);
-        //}
 
         //public static void ProcessKeyDown(KeyEventArgs e)
         //{

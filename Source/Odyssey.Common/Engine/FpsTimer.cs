@@ -2,7 +2,7 @@
 
 namespace Odyssey.Engine
 {
-    public class FpsTimer : IFpsTimerService
+    public class FpsTimer
     {
         private readonly Stopwatch clock;
         private long frameCount;

@@ -1,11 +1,12 @@
-﻿using Odyssey.UserInterface.Controls;
+﻿using System;
+using Odyssey.UserInterface.Controls;
 using SharpDX;
 
 namespace Odyssey.Graphics.Drawing
 {
     public class DiagonalCutCornerRectangle : CutCornerRectangle
     {
-        protected override void OnInitializing(ControlEventArgs e)
+        protected override void OnInitializing(EventArgs e)
         {
             base.OnInitializing(e);
             Vector2[] points =

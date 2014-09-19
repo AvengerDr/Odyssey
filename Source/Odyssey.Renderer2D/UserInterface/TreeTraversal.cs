@@ -51,7 +51,7 @@ namespace Odyssey.UserInterface
             else
             {
                 var contentControl = root as IContentControl;
-                if (contentControl != null)
+                if (contentControl != null && contentControl.Content != null)
                     yield return contentControl.Content;
             }
         }

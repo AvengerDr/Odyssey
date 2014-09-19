@@ -11,11 +11,6 @@ namespace Odyssey.UserInterface.Controls
         {
         }
 
-        public override bool Contains(Vector2 cursorLocation)
-        {
-            return BoundingRectangle.Contains(cursorLocation);
-        }
-
         public override void Render()
         {
             foreach (IShape shape in VisualState)

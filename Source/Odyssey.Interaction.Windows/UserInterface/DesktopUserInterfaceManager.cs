@@ -17,6 +17,7 @@
 
 using Odyssey.Engine;
 using Odyssey.Interaction;
+using Odyssey.UserInterface.Controls;
 using SharpDX;
 
 #endregion Using Directives
@@ -41,6 +42,8 @@ namespace Odyssey.UserInterface
             IWindowService windowService = Services.GetService<IWindowService>();
             KeyboardPlatform keyboardPlatform = new DesktopKeyboardPlatform(keyboardManager);
             keyboardPlatform.Initialize(windowService.NativeWindow);
+            keyboardPlatform.KeyUp += (s, e) => ((IDesktopOverlay) CurrentOverlay).ProcessKeyUp(e);
+            keyboardPlatform.KeyDown += (s, e) => ((IDesktopOverlay)CurrentOverlay).ProcessKeyDown(e);
             keyboardManager.Associate(keyboardPlatform);
         }
 
@@ -50,7 +53,7 @@ namespace Odyssey.UserInterface
             keyboardManager.Update();
             keyboardState = keyboardManager.GetState();
 
-            base.Update();
+            base.Update(); 
         }
     }
 }

@@ -15,6 +15,7 @@
 
 #region Using Directives
 
+using System;
 using Odyssey.UserInterface.Controls;
 using SharpDX;
 
@@ -50,7 +51,7 @@ namespace Odyssey.Graphics.Drawing
             transform = Matrix3x2.Translation(AbsolutePosition);
         }
 
-        protected override void OnInitializing(ControlEventArgs e)
+        protected override void OnInitializing(EventArgs e)
         {
             base.OnInitializing(e);
             Vector2[] points =

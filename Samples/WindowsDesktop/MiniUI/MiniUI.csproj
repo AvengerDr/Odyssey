@@ -58,13 +58,8 @@
       <Link>Assets\Assets.yaml</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Assets\Default.ocd">
-      <Link>Assets\Default.ocd</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="..\Assets\Default.otd">
-      <Link>Assets\Default.otd</Link>
+    <Content Include="..\Assets\Default.oxil">
+      <Link>Assets\Default.oxil</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Properties\Settings.settings">

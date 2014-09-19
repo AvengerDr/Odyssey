@@ -11,7 +11,7 @@ namespace Odyssey.Talos.Messages
     {
         public LightNode Light { get; private set; }
 
-        public LightMessage(Entity source, LightNode light, ChangeType action, bool isSynchronous = false)
+        public LightMessage(Entity source, LightNode light, UpdateType action, bool isSynchronous = false)
             : base(source, action, isSynchronous)
         {
             Light = light;

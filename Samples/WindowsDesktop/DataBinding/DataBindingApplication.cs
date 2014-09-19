@@ -34,7 +34,7 @@ using Color = SharpDX.Color;
 
 namespace DataBinding
 {
-    public class DataBindingApplication : Component, IDirect2DService, IWindowService
+    public class DataBindingApplication : Component, IWindowService
     {
         private readonly SimpleDeviceManager deviceManager;
         private readonly Direct2DDevice direct2DDevice;
@@ -82,13 +82,6 @@ namespace DataBinding
             overlay.Initialize();
             uiManager.Initialize();
             uiManager.CurrentOverlay = overlay;
-        }
-
-        public event EventHandler<EventArgs> DeviceCreated;
-
-        public Direct2DDevice Direct2DDevice
-        {
-            get { return direct2DDevice; }
         }
 
         public object NativeWindow

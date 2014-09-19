@@ -34,7 +34,7 @@ namespace Odyssey.Talos.Systems
                 var entity = mEntity.Source;
                 var cController = entity.GetComponent<ControllerComponent>();
 
-                if (mEntity.Action == ChangeType.Added)
+                if (mEntity.Action == UpdateType.Add)
                     cController.Controller.BindToEntity(entity);
             }
         }

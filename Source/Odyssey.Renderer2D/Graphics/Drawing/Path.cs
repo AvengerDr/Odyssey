@@ -19,7 +19,7 @@ namespace Odyssey.Graphics.Drawing
             Device.FillGeometry(Data, Fill);
         }
 
-        protected override void OnInitializing(ControlEventArgs e)
+        protected override void OnInitializing(EventArgs e)
         {
             if (Data == null)
                 throw new InvalidOperationException("'Data' cannot be null");

@@ -1,7 +1,4 @@
 !Assets
 - name: DefaultTheme
-  path: Default.ocd
+  path: Default.oxil
   type: Theme
-- name: DefaultText
-  path: Default.otd
-  type: TextDefinitions

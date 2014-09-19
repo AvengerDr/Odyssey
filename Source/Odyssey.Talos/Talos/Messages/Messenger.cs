@@ -35,10 +35,10 @@ namespace Odyssey.Talos.Messages
         {
             var interestedSystems = messageMap.Select<TMessage>();
             foreach (SystemBase system in interestedSystems)
-                SendTo(message, system);
+                SendToSystem(message, system);
         }
 
-        public void SendTo(Message message, SystemBase system)
+        public void SendToSystem(Message message, SystemBase system)
         {
             if (!message.IsBlocking)
                 system.EnqueueMessage(message);
@@ -46,7 +46,15 @@ namespace Odyssey.Talos.Messages
                 system.ReceiveBlockingMessage(message);
         }
 
-        public void SendTo<TComponent>(Message message, Entity target)
+        public void SendToSystem<TSystem, TMessage>(TMessage message)
+            where TSystem : SystemBase
+            where TMessage : Message
+        {
+            var system = messageMap.Select<TMessage>().OfType<TSystem>().First();
+            SendToSystem(message, system);
+        }
+
+        public void SendToEntity<TComponent>(Message message, Entity target)
             where TComponent : Component
         {
             target.GetComponent<TComponent>().ReceiveMessage(message);
@@ -59,12 +67,12 @@ namespace Odyssey.Talos.Messages
         /// <typeparam name="TMessage">The type of the <see cref="Message"/>.</typeparam>
         /// <param name="message">The message.</param>
         /// <param name="selector">The aspect.</param>
-        public void SendTo<TMessage>(TMessage message, Selector selector)
+        public void SendToSystems<TMessage>(TMessage message, Selector selector)
             where TMessage : Message
         {
             var interestedSystems = messageMap.Select<TMessage>().Where(s => s.Selector == selector);
             foreach (SystemBase system in interestedSystems)
-                SendTo(message, system);
+                SendToSystem(message, system);
         }
 
     }

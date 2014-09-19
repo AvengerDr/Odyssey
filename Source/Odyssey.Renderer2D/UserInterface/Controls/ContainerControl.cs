@@ -27,8 +27,7 @@ namespace Odyssey.UserInterface.Controls
 {
     public abstract class ContainerControl : Control, IContainer
     {
-        protected ContainerControl(string controlStyleClass)
-            : base(controlStyleClass)
+        protected ContainerControl(string controlStyleClass, string textStyleClass = UserInterface.Style.TextStyle.Default) : base(controlStyleClass, textStyleClass)
         {
             Controls = new ControlCollection(this);
             IsFocusable = false;
@@ -44,7 +43,7 @@ namespace Odyssey.UserInterface.Controls
         /// <summary>
         /// Occurs when a new control is added to the <see cref="ControlCollection"/>.
         /// </summary>
-        public event EventHandler<ControlEventArgs> ControlAdded;
+        public event EventHandler<EventArgs> ControlAdded;
 
         public override bool DesignMode
         {
@@ -62,11 +61,11 @@ namespace Odyssey.UserInterface.Controls
         /// </summary>
         /// <param name="e">The <see cref="ControlEventArgs"/> instance
         /// containing the event data.</param>
-        protected virtual void OnControlAdded(ControlEventArgs e)
+        protected virtual void OnControlAdded(EventArgs e)
         {
+            RaiseEvent(ControlAdded, this, e);
             if (!DesignMode)
                 Layout();
-            RaiseEvent(ControlAdded, this, e);
         }
 
         #endregion IContainer Members
@@ -89,7 +88,7 @@ namespace Odyssey.UserInterface.Controls
             control.Parent = this;
             control.Index = Controls.Count;
             Controls.Add(ToDispose(control));
-            OnControlAdded(new ControlEventArgs(control));
+            OnControlAdded(new EventArgs());
         }
 
         public virtual void AddRange(IEnumerable<UIElement> controls)
@@ -171,28 +170,22 @@ namespace Odyssey.UserInterface.Controls
         public override void Layout()
         {
             base.Layout();
-        }
-
-        protected internal override void Measure()
-        {
-            base.Measure();
             foreach (UIElement ctl in Controls)
             {
-                ctl.Measure();
+                ctl.Layout();
             }
         }
 
-        protected internal override void Arrange()
-        {
-            base.Arrange();
-            foreach (UIElement ctl in Controls)
-            {
-                ctl.Arrange();
-            }
+        //protected internal override void Measure()
+        //{
+        //    base.Measure();
+        //    foreach (UIElement ctl in Controls)
+        //    {
+        //        ctl.Measure();
+        //    }
+        //}
 
-        }
-
-        protected override void OnInitialized(ControlEventArgs e)
+        protected override void OnInitialized(EventArgs e)
         {
             base.OnInitialized(e);
             foreach (UIElement element in Controls)

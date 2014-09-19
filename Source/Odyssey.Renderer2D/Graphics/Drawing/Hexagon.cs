@@ -17,7 +17,7 @@ namespace Odyssey.Graphics.Drawing
             Device.DrawGeometry(polygonGeometry, Stroke);
         }
 
-        protected override void OnInitializing(ControlEventArgs e)
+        protected override void OnInitializing(EventArgs e)
         {
             base.OnInitializing(e);
             polygonGeometry = ToDispose(PolygonGeometry.New(string.Format("PL.{0}", Name), Device, BoundingRectangle.Center, BoundingRectangle.Width / 2, Sides,

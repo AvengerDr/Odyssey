@@ -26,11 +26,6 @@ namespace Odyssey.UserInterface.Controls
 {
     public class Button : ButtonBase
     {
-        public override bool Contains(Vector2 cursorLocation)
-        {
-            return BoundingRectangle.Contains(cursorLocation);
-        }
-
         protected override void OnPointerEnter(PointerEventArgs e)
         {
             base.OnPointerEnter(e);

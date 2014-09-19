@@ -43,11 +43,9 @@ namespace MiniUI
                     Name = "Button",
                     Content = new Label() { Name = "Label", TextStyleClass = "Small" }
                 },
-                Bindings = new Dictionary<string, Binding>
-                {
-                    {"Text", new Binding("Label", "CommandName")},
-                }
             };
+
+            commandTemplate.Bindings.Add("Text", new Binding("Label", "CommandName"));
 
             stackPanel.DataTemplate = commandTemplate;
             stackPanel.ItemsSource = new SampleVM[]

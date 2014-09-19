@@ -75,8 +75,8 @@ namespace Odyssey.UserInterface
 
         public void Initialize()
         {
-            ControlEventArgs args = new ControlEventArgs(this);
-            OnInitializing(args);
+            var args = new EventArgs();
+            
             foreach (var kvp in bindings)
             {
                 var bindingExpression = kvp.Value;
@@ -84,6 +84,7 @@ namespace Odyssey.UserInterface
                 bindingExpression.Initialize();
             }
 
+            OnInitializing(args);
             behaviors.Attach(this);
 
             if (Animator.HasAnimations)
@@ -153,14 +154,20 @@ namespace Odyssey.UserInterface
             }
         }
 
-        internal virtual void ProcessKeyDown(KeyEventArgs e)
+        internal virtual bool ProcessKeyDown(KeyEventArgs e)
         {
+            if (!CanRaiseEvents && KeyDown == null)
+                return false;
             OnKeyDown(e);
+            return true;
         }
 
-        internal virtual void ProcessKeyUp(KeyEventArgs e)
+        internal virtual bool ProcessKeyUp(KeyEventArgs e)
         {
+            if (!CanRaiseEvents && KeyUp == null)
+                return false;
             OnKeyUp(e);
+            return true;
         }
 
         internal virtual bool ProcessPointerMovement(MouseEventArgs e)
